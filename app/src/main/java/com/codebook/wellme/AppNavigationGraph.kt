@@ -1,21 +1,13 @@
 package com.codebook.wellme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Red
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.codebook.wellme.ui.screens.login.LoginScreen
 import com.codebook.wellme.ui.screens.OnboardingScreen
 import com.codebook.wellme.ui.screens.WelcomeScreen
-import com.codebook.wellme.ui.screens.login.LoginScreen
+import com.codebook.wellme.ui.screens.signup.SignUpScreen
 import com.codebook.wellme.utils.Screen
 
 @Composable
@@ -31,6 +23,9 @@ fun AppNavigationGraph() {
         }
         composable(Screen.OnBoardingScreen.destination) {
             OnboardingScreen(navController)
+        }
+        composable(Screen.SignUpScreen.destination) {
+            SignUpScreen(navController)
         }
         composable(Screen.LoginScreen.destination) {
             LoginScreen(navController)

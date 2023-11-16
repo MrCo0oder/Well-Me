@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,10 +25,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,8 +37,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -59,21 +63,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codebook.wellme.R
+import com.codebook.wellme.ui.theme.Alert
 import com.codebook.wellme.ui.theme.ColdGrey
 import com.codebook.wellme.ui.theme.DeepBlue
+import com.codebook.wellme.ui.theme.DustGrey
 import com.codebook.wellme.ui.theme.LilacPetals
 import com.codebook.wellme.ui.theme.LilacPetalsDark
 import com.codebook.wellme.ui.theme.PurplePlum
-import com.codebook.wellme.ui.theme.VioletLight
+import com.codebook.wellme.ui.theme.Violet
 import kotlinx.coroutines.launch
 
 @Composable
-fun RectanglePrimaryButton(modifier: Modifier = Modifier, label: String, onClick: () -> Unit) {
+fun RectanglePrimaryButton(
+    modifier: Modifier = Modifier,
+    label: String,
+    isEnabled: Boolean = true,
+    onClick: () -> Unit
+) {
     ElevatedButton(
         onClick = { onClick() },
         shape = RoundedCornerShape(20.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = PurplePlum),
-        modifier = modifier.fillMaxWidth()
+        colors = ButtonDefaults.buttonColors(
+            containerColor = PurplePlum,
+            disabledContainerColor = DustGrey
+        ),
+        modifier = modifier.fillMaxWidth(), enabled = isEnabled
     ) {
         Row(
             modifier = Modifier
@@ -103,12 +117,17 @@ private fun ButtonText1(label: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SubHeadingText(text: String, color: Color = ColdGrey, textAlign: TextAlign = TextAlign.Center) {
+fun SubHeadingText(
+    text: String,
+    color: Color = ColdGrey,
+    textAlign: TextAlign = TextAlign.Center,
+    modifier: Modifier = Modifier
+) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodySmall.copy(color = color),
         textAlign = textAlign,
-        modifier = Modifier,
+        modifier = modifier,
     )
 }
 
@@ -172,7 +191,7 @@ fun HorizontalPagerScreen(modifier: Modifier, navigate: () -> Unit) {
         }
         SquareButton {
             scope.launch {
-                if (pagerState.canScrollForward) {
+                if (pagerState.currentPage != 2) {
                     pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 } else navigate()
             }
@@ -237,8 +256,7 @@ fun Indicator(pagerState: PagerState) {
         horizontalArrangement = Arrangement.Center
     ) {
         repeat(pagerState.pageCount) { iteration ->
-            val color =
-                if (pagerState.currentPage == iteration) Color(0xFFFFFFFF) else PurplePlum
+            val color = if (pagerState.currentPage == iteration) PurplePlum else White
             Box(
                 modifier = Modifier
                     .padding(4.dp)
@@ -302,27 +320,24 @@ fun TextInputWithLabel(
             Modifier.fillMaxWidth(), maxLines = 1, isError = !error.isNullOrEmpty(),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = LilacPetals,
-                focusedIndicatorColor = VioletLight,
-                unfocusedIndicatorColor = LilacPetalsDark
+                focusedIndicatorColor = Violet,
+                unfocusedIndicatorColor = LilacPetalsDark,
+                errorIndicatorColor = Alert,
+                errorCursorColor = Alert,
+                errorTrailingIconColor = Alert,
+                errorSupportingTextColor = Alert
             ),
             placeholder = {
                 Text(
                     text = placeholder,
                     style = MaterialTheme.typography.bodyMedium.copy(labelColor)
                 )
-            }, shape = RoundedCornerShape(20.dp),
+            },
+            shape = RoundedCornerShape(20.dp),
             visualTransformation = if (isPassword && showPassword.value) PasswordVisualTransformation() else VisualTransformation.None,
             supportingText = {
-                if (!error.isNullOrEmpty())
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.Info,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = error, color = MaterialTheme.colorScheme.error)
-                    }
+                if (!error?.trim().isNullOrEmpty())
+                    SubHeadingText(text = error.toString(), color = Alert, TextAlign.Start)
             },
             textStyle = MaterialTheme.typography.bodyMedium.copy(labelColor),
             singleLine = true,
@@ -347,11 +362,11 @@ fun TextInputWithLabel(
                 }
             },
             leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = leadingIcon),
-                        contentDescription = null,
-                        tint = labelColor
-                    )
+                Icon(
+                    painter = painterResource(id = leadingIcon),
+                    contentDescription = null,
+                    tint = labelColor
+                )
 
             },
             keyboardOptions = if (isPassword) {
@@ -363,6 +378,49 @@ fun TextInputWithLabel(
                 keyboardOptions,
         )
     }
+}
+
+@Composable
+fun SocialMediaButton(icon: Int, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = { onClick() }, modifier = Modifier.size(70.dp), border =
+        BorderStroke(1.dp, Color.LightGray), shape = RoundedCornerShape(20.dp)
+    ) {
+        Image(
+            painter = painterResource(id = icon),
+            contentDescription = null, Modifier.size(30.dp)
+        )
+    }
+}
+
+@Composable
+fun ClickableText(label: String, labelColor: Color = PurplePlum, onClick: () -> Unit) {
+    TextButton(onClick = { onClick() }) {
+        SubHeadingText(text = label, color = labelColor)
+    }
+}
+
+@Composable
+fun CustomCheckbox(checkBox: MutableState<Boolean>, interactionSource: (Boolean) -> Unit) {
+    Checkbox(
+        modifier = Modifier
+            .border(
+                BorderStroke(1.dp, Color.DarkGray),
+                RoundedCornerShape(5.dp)
+            )
+            .padding(4.dp)
+            .size(16.dp),
+        checked = checkBox.value,
+        onCheckedChange = {
+            checkBox.value = it
+            interactionSource(it)
+        },
+        colors = CheckboxDefaults.colors(
+            checkmarkColor = PurplePlum,
+            checkedColor = Color.Transparent,
+            uncheckedColor = Color.Transparent
+        )
+    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)

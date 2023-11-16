@@ -37,15 +37,13 @@ fun OnboardingScreen(
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 HorizontalPagerScreen(Modifier.weight(1f)) {
-                    navController.navigate(Screen.LoginScreen.destination)
+                    navController.navigate(Screen.SignUpScreen.destination)
                 }
             }
-            OutlinedButtonPurple() { navController.navigate(Screen.LoginScreen.destination) }
+            OutlinedButtonPurple { navController.navigate(Screen.SignUpScreen.destination) }
         }
     }
 }
-
-
 
 
 @Preview(showBackground = true)

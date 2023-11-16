@@ -40,7 +40,7 @@ fun WelcomeScreenContent(
         floatingActionButton = {
             RectanglePrimaryButton(Modifier.padding(horizontal = 24.dp), label = "Let’s start") {
                 navController.navigate(Screen.OnBoardingScreen.destination) {
-
+                    popUpTo(Screen.WelcomeScreen.destination) { inclusive = true }
                 }
             }
         },
@@ -60,7 +60,7 @@ fun WelcomeScreenContent(
                 Modifier
                     .size(104.dp), contentScale = ContentScale.FillBounds
             )
-            HeadlineLarge("Welcome to\nOneLook")
+            HeadlineLarge("Welcome to\nWell Me")
             SubHeadingText("Just take a look and take action!")
         }
     }
