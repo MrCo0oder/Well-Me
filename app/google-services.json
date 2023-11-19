@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1086976314887",
+    "project_id": "well-me-f4aa9",
+    "storage_bucket": "well-me-f4aa9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086976314887:android:0a8068fa84a2f3c02824a2",
+        "android_client_info": {
+          "package_name": "com.codebook.wellme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086976314887-g8g4udauc5di5fvnmtlgg4sib4gtc227.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQtX-h_vqrqYkMx14q29Y7xcXi1nwjU00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1086976314887-g8g4udauc5di5fvnmtlgg4sib4gtc227.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

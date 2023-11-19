@@ -2,11 +2,13 @@ package com.codebook.wellme.ui.screens.signup
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
-import com.codebook.wellme.model.CreateAccountState
-import com.codebook.wellme.model.CreateAccountStateUiEvents
+import com.codebook.wellme.model.signup.CreateAccountState
+import com.codebook.wellme.model.signup.CreateAccountStateUiEvents
 import com.codebook.wellme.utils.Constants.PASSWORD_PATTERN
+import com.codebook.wellme.utils.validateWithRegex
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import java.util.regex.Pattern
 
 class CreateAccountViewModel : ViewModel() {
@@ -17,7 +19,10 @@ class CreateAccountViewModel : ViewModel() {
     fun onEvent(events: CreateAccountStateUiEvents) {
         when (events) {
             is CreateAccountStateUiEvents.Email -> {
-                _uiState.value = uiState.value.copy(email = events.value)
+//                _uiState.value = uiState.value.copy()
+                _uiState.update {
+                    it.copy(email = events.value)
+                }
             }
 
             is CreateAccountStateUiEvents.Password -> {
@@ -30,15 +35,6 @@ class CreateAccountViewModel : ViewModel() {
         }
     }
 
-    fun validateEmail(): String? {
-        return if (_uiState.value.email.isEmpty()) {
-            null
-        } else if (!Pattern.matches(Patterns.EMAIL_ADDRESS.toString(), _uiState.value.email)) {
-            "Please enter a valid email."
-        } else {
-            null
-        }
-    }
 
     private fun isValidEmail() = _uiState.value.email.isNotEmpty() && Pattern.matches(
         Patterns.EMAIL_ADDRESS.toString(),
@@ -46,38 +42,21 @@ class CreateAccountViewModel : ViewModel() {
     )
 
     fun isScreenValid(): Boolean =
-        isValidEmail() && validateWithRegex(
-            _uiState.value.password,
+        isValidEmail() && _uiState.value.password.validateWithRegex(
             PASSWORD_PATTERN
         ) && isValidName(_uiState.value.name)
 
-    private fun isValidName(name: String): Boolean = name.isNotEmpty() && name.length >= 4
+    private fun isValidName(name: String): Boolean =
+        name.trim().isNotEmpty() && name.trim().length >= 4
 
     fun validateName(name: String): String? {
-        return if (name.isEmpty()) {
+        return if (name.trim().isEmpty()) {
             null
-        } else if (name.length <= 4) {
-            ("Please enter a valid name at least 4 characters.")
+        } else if (name.trim().length < 4) {
+            ("Please enter a valid name at least 4 characters")
         } else {
             null
         }
     }
-
-    fun validatePassword(): String? {
-        return if (_uiState.value.password.isEmpty()) {
-            null
-        } else if (!validateWithRegex(_uiState.value.password, PASSWORD_PATTERN)) {
-            (" ")
-        } else {
-            null
-        }
-    }
-
-    fun validateWithRegex(string: String, regex: String): Boolean {
-        val pattern = Pattern.compile(regex)
-        val matcher = pattern.matcher(string)
-        return matcher.matches()
-    }
-
 
 }

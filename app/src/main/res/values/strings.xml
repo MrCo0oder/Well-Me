@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Well Me</string>
+    <string name="web_client_id">1086976314887-g8g4udauc5di5fvnmtlgg4sib4gtc227.apps.googleusercontent.com</string>
+<!--    1086976314887-g8g4udauc5di5fvnmtlgg4sib4gtc227.apps.googleusercontent.com-->
+    <string name="by_continuing_you_accept_our_privacy_policy_and_term_of_use">By continuing you accept our Privacy Policy and Term of Use.</string>
+    <string name="or">Or</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="at_least_one_number_or_symbol">At least one number or symbol</string>
+    <string name="at_least_8_characters">At least 8 characters</string>
+    <string name="both_uppercase_and_lowercase_characters">Both uppercase and lowercase characters</string>
+    <string name="place_the_password_here">Place the password here</string>
+    <string name="password">Password</string>
+    <string name="enter_your_e_mail_here">Enter your e-mail here</string>
+    <string name="e_mail">E-mail</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="full_name">Full Name</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="don_t_have_an_account_yet">Don’t have an account yet?</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="please_enter_a_valid_email">Please enter a valid email.</string>
+    <string name="enter_your_e_mail">Enter your e-mail</string>
+    <string name="you_will_receive_a_link_to_confirm_the_password_change_to_the_e_mail_address_provided">You will receive a link to confirm the password change to the e-mail address provided</string>
+    <string name="confirm_e_mail">Confirm e-mail</string>
+    <string name="check_your_email_inbox_to_reset_your_password">Check Your Email Inbox\nTo Reset Your Password</string>
 </resources>

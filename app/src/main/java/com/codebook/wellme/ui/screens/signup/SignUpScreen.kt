@@ -3,6 +3,12 @@
 package com.codebook.wellme.ui.screens.signup
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,54 +19,134 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.codebook.wellme.R
-import com.codebook.wellme.model.CreateAccountStateUiEvents
+import com.codebook.wellme.model.signup.CreateAccountStateUiEvents
 import com.codebook.wellme.ui.ClickableText
 import com.codebook.wellme.ui.CustomCheckbox
 import com.codebook.wellme.ui.HeadlineLarge
+import com.codebook.wellme.ui.PasswordValidationComponent
 import com.codebook.wellme.ui.RectanglePrimaryButton
 import com.codebook.wellme.ui.SocialMediaButton
 import com.codebook.wellme.ui.SubHeadingText
 import com.codebook.wellme.ui.TextInputWithLabel
-import com.codebook.wellme.ui.theme.Alert
 import com.codebook.wellme.ui.theme.DeepBlue
-import com.codebook.wellme.ui.theme.Turquoise
+import com.codebook.wellme.utils.Constants.AT_LEAST_NUM_OR_CHAR_PATTERN
+import com.codebook.wellme.utils.Constants.UPPER_LOWER_PATTERN
+import com.codebook.wellme.utils.GoogleAuthUiClient
 import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.utils.validateEmail
+import com.codebook.wellme.utils.validatePassword
+import com.codebook.wellme.utils.validateWithRegex
+import com.google.android.gms.auth.api.identity.Identity
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(navController: NavController) {
     val viewModel: CreateAccountViewModel = viewModel()
-    SignUpScreenContent(navController, viewModel)
+//    val signInGoogleViewModel: SignInGoogleViewModel = viewModel(
+//        factory = SignInGoogleViewModelFactory(LocalContext.current.applicationContext as Application)
+//    )//        signInGoogleViewModel,
+    val signInViewModel: SignInViewModel = viewModel()
+    SignUpScreenContent(
+        navController, viewModel,
+
+        signInViewModel
+    )
 }
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SignUpScreenContent(navController: NavController, viewModel: CreateAccountViewModel) {
+private fun SignUpScreenContent(
+    navController: NavController,
+    viewModel: CreateAccountViewModel,
+    signViewModel: SignInViewModel,
+) {
     val uiState = viewModel.uiState.collectAsState().value
+    val signInRequestCode = 1
+//    val state = signInViewModel.googleUser.observeAsState()
+//    val user = state.value
+    val googleState by signViewModel.userState.collectAsState()
+    val c = LocalContext.current.applicationContext
+    val scope = rememberCoroutineScope()
+    val googleAuthClient by lazy {
+        GoogleAuthUiClient(
+            c,
+            Identity.getSignInClient(c)
+        )
+    }
+    val isError = remember { mutableStateOf(false) }
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            if (result.resultCode == RESULT_OK) {
+                scope.launch {
+                    val signInResult = googleAuthClient.signInWithIntent(
+                        intent = result.data ?: return@launch
+                    )
+                    Log.d("SignUpScreenContent", result.data.toString())
+                    signViewModel.onSignInResult(signInResult)
+                }
+            }
+        }
+    )
+    LaunchedEffect(key1 = googleState.isSignInSuccessful) {
+        if (googleState.isSignInSuccessful) {
+            Toast.makeText(c, "Sign in successful", Toast.LENGTH_LONG).show()
+            signViewModel.resetState()
+        }
+    }
+    LaunchedEffect(key1 = googleState.signInError) {
+        googleState.signInError?.let { error ->
+            Toast.makeText(
+                c,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+//    val authResultLauncher =
+//        rememberLauncherForActivityResult(contract = GoogleApiContract()) { task ->
+//            try {
+//                val gsa = task?.getResult(ApiException::class.java)
+//
+//                if (gsa != null) {
+//                    signInViewModel.fetchSignInUser(gsa.email, gsa.displayName)
+//                } else {
+//                    isError.value = true
+//                }
+//            } catch (e: ApiException) {
+//                e.printStackTrace()
+//            }
+//        }
     Scaffold(
         Modifier
             .background(White)
@@ -69,63 +155,65 @@ private fun SignUpScreenContent(navController: NavController, viewModel: CreateA
     ) {
         Column(
             Modifier
-//                .padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.weight(0.005f))
-            HeadlineLarge("Create an account")
+            Spacer(modifier = Modifier.height(60.dp))
+            HeadlineLarge(stringResource(R.string.create_an_account))
             TextInputWithLabel(
-                label = "Full Name",
+                label = stringResource(R.string.full_name),
                 labelColor = DarkGray,
-                placeholder = "Enter your name",
+                placeholder = stringResource(R.string.enter_your_name),
                 default = uiState.name,
                 error = viewModel.validateName(uiState.name),
-                leadingIcon = R.drawable.profile
+                leadingIcon = R.drawable.profile, keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
+                )
             ) {
                 viewModel.onEvent(CreateAccountStateUiEvents.Name(it))
             }
             TextInputWithLabel(
-                label = "E-mail",
+                label = stringResource(R.string.e_mail),
                 labelColor = DarkGray,
-                placeholder = "Enter your e-mail here",
+                placeholder = stringResource(R.string.enter_your_e_mail_here),
                 default = uiState.email,
-                error = viewModel.validateEmail(),
-                leadingIcon = R.drawable.email
+                error = uiState.email.validateEmail(),
+                leadingIcon = R.drawable.email, keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                )
             ) {
                 viewModel.onEvent(CreateAccountStateUiEvents.Email(it))
             }
             TextInputWithLabel(
-                label = "Password",
+                label = stringResource(R.string.password),
                 labelColor = DarkGray,
-                placeholder = "Place the password here",
+                placeholder = stringResource(R.string.place_the_password_here),
                 default = uiState.password,
-                error = viewModel.validatePassword(),
+                error = uiState.password.validatePassword(withMessage = false),
                 isPassword = true,
-                leadingIcon = R.drawable.lock
+                leadingIcon = R.drawable.lock, keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                )
             ) { password ->
                 viewModel.onEvent(CreateAccountStateUiEvents.Password(password))
             }
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 PasswordValidationComponent(
-                    "At least 8 characters",
-                    uiState.password.length >= 8
+                    label = stringResource(R.string.at_least_8_characters),
+                    isValid = uiState.password.length >= 8
                 )
                 PasswordValidationComponent(
-                    "Both uppercase and lowercase characters",
-                    viewModel.validateWithRegex(
-                        uiState.password,
-                        "^(?=.*[a-z])(?=.*[A-Z]).+\$"
-                    )
+                    label = stringResource(R.string.both_uppercase_and_lowercase_characters),
+                    isValid = uiState.password.validateWithRegex(UPPER_LOWER_PATTERN)
                 )
                 PasswordValidationComponent(
-                    "At least one number & symbol",
-                    viewModel.validateWithRegex(
-                        uiState.password,
-                        "^(?=.*[0-9])(?=.*[!@#\$%^&*()_+{}\\[\\]:;<>,.?~\\\\/-]).+\$"
-                    )
+                    stringResource(R.string.at_least_one_number_or_symbol),
+                    uiState.password.validateWithRegex(AT_LEAST_NUM_OR_CHAR_PATTERN)
                 )
             }
             Box(
@@ -143,13 +231,13 @@ private fun SignUpScreenContent(navController: NavController, viewModel: CreateA
                 CustomCheckbox(checkBox) { }
                 Spacer(modifier = Modifier.width(8.dp))
                 SubHeadingText(
-                    text = "By continuing you accept our Privacy Policy and Term of Use.",
+                    text = stringResource(R.string.by_continuing_you_accept_our_privacy_policy_and_term_of_use),
                     color = DarkGray,
                     TextAlign.Justify
                 )
             }
             RectanglePrimaryButton(
-                label = "Sign Up",
+                label = stringResource(R.string.sign_up),
                 isEnabled = viewModel.isScreenValid() && checkBox.value
             ) {
 //                navController.navigate(Screen.OnBoardingScreen.destination)
@@ -164,7 +252,7 @@ private fun SignUpScreenContent(navController: NavController, viewModel: CreateA
                         .height(1.dp)
                         .weight(1f)
                 )
-                SubHeadingText(text = "Or", color = DeepBlue)
+                SubHeadingText(text = stringResource(R.string.or), color = DeepBlue)
                 Box(
                     modifier = Modifier
                         .background(LightGray)
@@ -178,55 +266,67 @@ private fun SignUpScreenContent(navController: NavController, viewModel: CreateA
                 horizontalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 SocialMediaButton(icon = R.drawable.google) {
-
+//                    authResultLauncher.launch(signInRequestCode)
+//                    viewModel.apply {
+//                        onEvent(CreateAccountStateUiEvents.Name(user?.name.toString()))
+//                        onEvent(CreateAccountStateUiEvents.Email(user?.email.toString()))
+//                        Log.d("SignUpScreenContent: ", user.toString())
+//                    }
+                    scope.launch {
+                        val signInIntentSender = googleAuthClient.signIn()
+                        launcher.launch(
+                            IntentSenderRequest.Builder(
+                                signInIntentSender ?: return@launch
+                            ).build()
+                        )
+                    }
                 }
                 SocialMediaButton(icon = R.drawable.facebook) {
 
                 }
             }
+            LaunchedEffect(key1 = googleState.isSignInSuccessful) {
+                if (googleState.isSignInSuccessful)
+                    Toast.makeText(
+                        c,
+                        googleAuthClient.getSignedInUser().toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                else
+                    Toast.makeText(
+                        c,
+                        googleState.signInError.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                SubHeadingText(text = "Already have an account?", color = DeepBlue)
-                ClickableText(label = "Login") {
+                SubHeadingText(
+                    text = stringResource(R.string.already_have_an_account),
+                    color = DeepBlue
+                )
+                ClickableText(label = stringResource(R.string.login)) {
                     navController.navigate(Screen.LoginScreen.destination) {
                         popUpTo(Screen.SignUpScreen.destination) { inclusive = true }
                     }
                 }
             }
-            Spacer(modifier = Modifier.weight(0.005f))
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
+    LaunchedEffect(key1 = uiState) {
 
-}
-
-@Composable
-private fun PasswordValidationComponent(label: String, isValid: Boolean) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        if (isValid)
-            Icon(
-                painter = painterResource(id = R.drawable.check),
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = Turquoise
-            ) else
-            Icon(
-                painter = painterResource(id = R.drawable.no_data),
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = Alert
-            )
-        Spacer(modifier = Modifier.width(8.dp))
-        SubHeadingText(
-            text = label,
-            color = DarkGray,
-            TextAlign.Justify
-        )
     }
+
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewFun() {
-    SignUpScreenContent(navController = rememberNavController(), viewModel = viewModel())
+//    SignUpScreenContent(
+//        navController = rememberNavController(),
+//        viewModel = viewModel(),
+//        signInViewModel = null
+//    )userData: (Pair<String, String>) -> Unit
 }

@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 //    id("com.google.gms.google-services")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -71,6 +72,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
     implementation("androidx.navigation:navigation-compose:2.7.4")
     //viewpager
@@ -86,6 +88,8 @@ dependencies {
     implementation("androidx.compose.runtime:runtime:1.4.3")
     implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
 
-//    implementation "com.google.accompanist:accompanist-systemuicontroller:0.33.2-alpha"
+    implementation ("androidx.core:core-splashscreen:1.0.0-beta02")
+    implementation("com.google.firebase:firebase-auth:22.3.0")
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
 
 }

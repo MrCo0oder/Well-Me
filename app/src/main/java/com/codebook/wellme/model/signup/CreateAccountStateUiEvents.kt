@@ -1,4 +1,4 @@
-package com.codebook.wellme.model
+package com.codebook.wellme.model.signup
 
 sealed class CreateAccountStateUiEvents {
     data class Email(val value: String) : CreateAccountStateUiEvents()

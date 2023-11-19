@@ -1,4 +1,4 @@
-package com.codebook.wellme.model
+package com.codebook.wellme.model.signup
 
 data class CreateAccountState(
     var email: String = "",

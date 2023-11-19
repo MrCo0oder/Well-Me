@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.codebook.wellme.ui.screens.forgetPassword.EmailSentScreen
+import com.codebook.wellme.ui.screens.forgetPassword.ForgetPasswordScreen
 import com.codebook.wellme.ui.screens.login.LoginScreen
 import com.codebook.wellme.ui.screens.OnboardingScreen
 import com.codebook.wellme.ui.screens.WelcomeScreen
@@ -29,6 +31,12 @@ fun AppNavigationGraph() {
         }
         composable(Screen.LoginScreen.destination) {
             LoginScreen(navController)
+        }
+        composable(Screen.ForgetPasswordScreen.destination) {
+            ForgetPasswordScreen(navController)
+        }
+        composable(Screen.EmailSentScreen.destination) {
+            EmailSentScreen(navController)
         }
         /*   composable(Screen.OnBoardingScreen.destination) {
                OnboardingScreen(mSignInViewModel, navController) {

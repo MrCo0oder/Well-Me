@@ -51,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -70,6 +71,7 @@ import com.codebook.wellme.ui.theme.DustGrey
 import com.codebook.wellme.ui.theme.LilacPetals
 import com.codebook.wellme.ui.theme.LilacPetalsDark
 import com.codebook.wellme.ui.theme.PurplePlum
+import com.codebook.wellme.ui.theme.Turquoise
 import com.codebook.wellme.ui.theme.Violet
 import kotlinx.coroutines.launch
 
@@ -110,7 +112,7 @@ fun RectanglePrimaryButton(
 private fun ButtonText1(label: String, modifier: Modifier = Modifier) {
     Text(
         text = label,
-        style = MaterialTheme.typography.labelLarge.copy(color = Color.White),
+        style = MaterialTheme.typography.labelLarge.copy(color = White),
         modifier = modifier,
         textAlign = TextAlign.Center
     )
@@ -138,6 +140,20 @@ fun HeadlineLarge(text: String) {
         style = MaterialTheme.typography.headlineLarge.copy(color = DeepBlue),
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+fun BodyTextTwo(
+    text: String, color: Color = ColdGrey,
+    textAlign: TextAlign = TextAlign.Center,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyMedium.copy(color = color),
+        textAlign = textAlign,
+        modifier = modifier,
     )
 }
 
@@ -310,12 +326,19 @@ fun TextInputWithLabel(
         SubHeadingText(text = label, textAlign = TextAlign.Start, color = labelColor)
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(
-            value = value.trim(),
+            value = value,
             onValueChange = {
-                value = it.trim()
-                onValueChange(it.trim())
-                if (it.isNotEmpty())
-                    showIcon.value = true
+                if (isPassword) {
+                    value = it.trim()
+                    onValueChange(it.trim())
+                    if (it.isNotEmpty())
+                        showIcon.value = true
+                } else {
+                    value = it
+                    onValueChange(it)
+                    if (it.isNotEmpty())
+                        showIcon.value = true
+                }
             },
             Modifier.fillMaxWidth(), maxLines = 1, isError = !error.isNullOrEmpty(),
             colors = TextFieldDefaults.textFieldColors(
@@ -421,6 +444,31 @@ fun CustomCheckbox(checkBox: MutableState<Boolean>, interactionSource: (Boolean)
             uncheckedColor = Color.Transparent
         )
     )
+}
+
+@Composable
+fun PasswordValidationComponent(label: String, isValid: Boolean) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        if (isValid)
+            Icon(
+                painter = painterResource(id = R.drawable.check),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = Unspecified
+            ) else
+            Icon(
+                painter = painterResource(id = R.drawable.no_data),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = Alert
+            )
+        Spacer(modifier = Modifier.width(8.dp))
+        SubHeadingText(
+            text = label,
+            color = Color.DarkGray,
+            TextAlign.Justify
+        )
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
