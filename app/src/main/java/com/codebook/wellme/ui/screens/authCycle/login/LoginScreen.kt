@@ -1,4 +1,4 @@
-package com.codebook.wellme.ui.screens.login
+package com.codebook.wellme.ui.screens.authCycle.login
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -34,7 +34,7 @@ import com.codebook.wellme.ui.ClickableText
 import com.codebook.wellme.ui.HeadlineLarge
 import com.codebook.wellme.ui.RectanglePrimaryButton
 import com.codebook.wellme.ui.SocialMediaButton
-import com.codebook.wellme.ui.SubHeadingText
+import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.ui.TextInputWithLabel
 import com.codebook.wellme.ui.theme.DeepBlue
 import com.codebook.wellme.utils.Screen
@@ -102,7 +102,9 @@ private fun LoginScreenContent(navController: NavController, viewModel: LoginVie
                 label = stringResource(R.string.login),
                 isEnabled = viewModel.isScreenValid()
             ) {
-//                navController.navigate(Screen.OnBoardingScreen.destination)
+                navController.navigate(Screen.MainHomeScreen.destination){
+                    popUpTo(Screen.LoginScreen.destination){inclusive=true}
+                }
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -114,7 +116,7 @@ private fun LoginScreenContent(navController: NavController, viewModel: LoginVie
                         .height(1.dp)
                         .weight(1f)
                 )
-                SubHeadingText(text = stringResource(R.string.or), color = DeepBlue)
+                BodyText3Text(text = stringResource(R.string.or), color = DeepBlue)
                 Box(
                     modifier = Modifier
                         .background(Color.LightGray)
@@ -137,7 +139,7 @@ private fun LoginScreenContent(navController: NavController, viewModel: LoginVie
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                SubHeadingText(
+                BodyText3Text(
                     text = stringResource(R.string.don_t_have_an_account_yet),
                     color = DeepBlue
                 )

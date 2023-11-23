@@ -5,18 +5,22 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.Center
+import androidx.compose.foundation.layout.Arrangement.End
+import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -25,17 +29,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
@@ -47,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
@@ -56,6 +65,10 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -63,9 +76,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.codebook.wellme.R
 import com.codebook.wellme.ui.theme.Alert
 import com.codebook.wellme.ui.theme.ColdGrey
+import com.codebook.wellme.ui.theme.DarkGrey
 import com.codebook.wellme.ui.theme.DeepBlue
 import com.codebook.wellme.ui.theme.DustGrey
 import com.codebook.wellme.ui.theme.LilacPetals
@@ -96,7 +112,7 @@ fun RectanglePrimaryButton(
                 .fillMaxWidth()
                 .padding(vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = SpaceEvenly
         ) {
             ButtonText1(label, Modifier.weight(1f))
             Image(
@@ -119,7 +135,7 @@ private fun ButtonText1(label: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SubHeadingText(
+fun BodyText3Text(
     text: String,
     color: Color = ColdGrey,
     textAlign: TextAlign = TextAlign.Center,
@@ -134,12 +150,47 @@ fun SubHeadingText(
 }
 
 @Composable
-fun HeadlineLarge(text: String) {
+fun HeadLine2Text(
+    text: String, modifier: Modifier = Modifier,
+    color: Color = ColdGrey,
+    textAlign: TextAlign = TextAlign.Center,
+
+    ) {
     Text(
         text = text,
-        style = MaterialTheme.typography.headlineLarge.copy(color = DeepBlue),
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
+        style = MaterialTheme.typography.headlineMedium.copy(color = color),
+        textAlign = textAlign,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun HeadlineLarge(
+    text: String, color: Color = ColdGrey,
+    textAlign: TextAlign = TextAlign.Center,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineLarge.copy(color = color),
+        modifier = modifier,
+        textAlign = textAlign
+    )
+}
+
+@Composable
+fun Headline3(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = ColdGrey,
+    textAlign: TextAlign = TextAlign.Center,
+
+    ) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineSmall.copy(color = color),
+        modifier = modifier,
+        textAlign = textAlign
     )
 }
 
@@ -157,6 +208,20 @@ fun BodyTextTwo(
     )
 }
 
+@Composable
+fun ButtonTextTwo(
+    text: String, color: Color = ColdGrey,
+    textAlign: TextAlign = TextAlign.Center,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelMedium.copy(color = color),
+        textAlign = textAlign,
+        modifier = modifier,
+    )
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HorizontalPagerScreen(modifier: Modifier, navigate: () -> Unit) {
@@ -167,71 +232,95 @@ fun HorizontalPagerScreen(modifier: Modifier, navigate: () -> Unit) {
     ) {
         pageCount
     }
-    Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Spacer(modifier = Modifier.height(15.dp))
-        HorizontalPager(
-            modifier = modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            state = pagerState,
-            userScrollEnabled = true,
-        ) { current ->
-            when (current) {
-                0 -> {
-                    OnBoardingComponent(
-                        modifier = Modifier.weight(1f),
-                        image = R.drawable.calm,
-                        header = "Keep calm and stay\nin control",
-                        subHeading = "You can check your health with just one look.",
-                    )
-                }
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        Column(
+            modifier.fillMaxSize(),
+            horizontalAlignment = CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Spacer(modifier = Modifier.height(15.dp))
+            HorizontalPager(
+                modifier = modifier
+                    .fillMaxSize(),
+                state = pagerState,
+                userScrollEnabled = true,
+            ) { current ->
+                when (current) {
+                    0 -> {
+                        OnBoardingComponent(
+                            modifier = Modifier.weight(1f),
+                            image = R.drawable.calm,
+                            header = "Keep calm and stay\nin control",
+                            subHeading = "You can check your health with just one look.",
+                        )
+                    }
 
-                1 -> {
-                    OnBoardingComponent(
-                        modifier = Modifier.weight(1f),
-                        image = R.drawable.pills,
-                        header = "Don’t miss a single\npill, ever!",
-                        subHeading = "Plan your supplementation in details.",
-                    )
-                }
+                    1 -> {
+                        OnBoardingComponent(
+                            modifier = Modifier.weight(1f),
+                            image = R.drawable.pills,
+                            header = "Don’t miss a single\npill, ever!",
+                            subHeading = "Plan your supplementation in details.",
+                        )
+                    }
 
-                else -> {
-                    OnBoardingComponent(
-                        modifier = Modifier.weight(1f),
-                        image = R.drawable.yoga,
-                        header = "Exercise more\n& breathe better",
-                        subHeading = "Learn, measure, set daily goals.",
-                    )
+                    else -> {
+                        OnBoardingComponent(
+                            modifier = Modifier.weight(1f),
+                            image = R.drawable.yoga,
+                            header = "Exercise more\n& breathe better",
+                            subHeading = "Learn, measure, set daily goals.",
+                        )
+                    }
                 }
             }
         }
-        SquareButton {
-            scope.launch {
-                if (pagerState.currentPage != 2) {
-                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                } else navigate()
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = CenterHorizontally) {
+            SquareButton(Modifier.size(88.dp)) {
+                scope.launch {
+                    if (pagerState.currentPage != 2) {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    } else navigate()
+                }
             }
+            Spacer(modifier = Modifier.height(40.dp))
+            Indicator(pagerState = pagerState)
         }
-        Spacer(modifier = Modifier.height(15.dp))
-        Indicator(pagerState = pagerState)
     }
 }
 
 @Composable
 fun SquareButton(
+    modifier: Modifier = Modifier,
+    icon: Int = R.drawable.arrow_long_right,
+    color: Color = PurplePlum,
+    cornerCarve: Int = 20,
     navigate: () -> Unit
 ) {
-    Button(
+//    Button(
+//        onClick = {
+//            navigate()
+//        },
+//        modifier = modifier.wrapContentSize(),
+//        shape = RoundedCornerShape(cornerCarve.dp),
+//        colors = ButtonDefaults.elevatedButtonColors(containerColor = color)
+//    ) {
+//        Icon(
+//            painter = painterResource(id = icon),
+//            contentDescription = null, tint = Unspecified
+//        )
+//    }
+    IconButton(
         onClick = {
             navigate()
         },
-        modifier = Modifier.size(88.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = ButtonDefaults.elevatedButtonColors(containerColor = PurplePlum)
+        modifier = modifier.clip(RoundedCornerShape(cornerCarve.dp)),
+        colors = IconButtonDefaults.iconButtonColors
+            (containerColor = color)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.arrow_long_right),
-            contentDescription = null
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = null, tint = Unspecified
         )
     }
 }
@@ -244,59 +333,68 @@ fun OnBoardingComponent(
     subHeading: String
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = CenterHorizontally,
         modifier = modifier
             .background(Color.Transparent)
             .padding(vertical = 20.dp)
+            .fillMaxSize()
     ) {
+        Spacer(modifier = Modifier.height(60.dp))
         Image(
             painter = painterResource(image),
             contentScale = ContentScale.Fit,
             contentDescription = null,
-            modifier = Modifier.size(300.dp)
+            modifier = Modifier.size(350.dp)
         )
         Spacer(modifier = Modifier.height(40.dp))
-        HeadlineLarge(text = header)
+        HeadlineLarge(text = header, modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(20.dp))
-        SubHeadingText(text = subHeading)
+        BodyText3Text(text = subHeading, modifier = Modifier.fillMaxWidth())
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Indicator(pagerState: PagerState) {
+    val coroutineScope = rememberCoroutineScope()
     Row(
         Modifier
             .fillMaxWidth()
             .padding(vertical = 20.dp, horizontal = 16.dp),
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Center
     ) {
         repeat(pagerState.pageCount) { iteration ->
             val color = if (pagerState.currentPage == iteration) PurplePlum else White
             Box(
                 modifier = Modifier
                     .padding(4.dp)
-                    .width(58.dp)
-                    .height(4.dp)
+                    .width(70.dp)
+                    .height(6.dp)
                     .clip(CircleShape)
                     .background(color)
-
+                    .clickable {
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(iteration)
+                        }
+                    }
             )
         }
     }
 }
 
 @Composable
-fun OutlinedButtonPurple(onClick: () -> Unit) {
+fun OutlinedButtonPurple(
+    modifier: Modifier = Modifier,
+    buttonModifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit
+) {
     OutlinedButton(
         onClick = { onClick() },
         border = BorderStroke(1.dp, PurplePlum),
-        modifier = Modifier.padding(vertical = 35.dp, horizontal = 24.dp)
+        modifier = buttonModifier.wrapContentSize()
     ) {
-        Text(
-            text = "Skip Intro",
-            style = MaterialTheme.typography.labelMedium.copy(color = PurplePlum)
-        )
+        ButtonTextTwo(text = text, modifier = modifier, color = PurplePlum)
     }
 }
 
@@ -323,7 +421,7 @@ fun TextInputWithLabel(
     val showIcon = remember { mutableStateOf(false) }
     val localFocusManager = LocalFocusManager.current
     Column(modifier.wrapContentSize()) {
-        SubHeadingText(text = label, textAlign = TextAlign.Start, color = labelColor)
+        BodyText3Text(text = label, textAlign = TextAlign.Start, color = labelColor)
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(
             value = value,
@@ -360,7 +458,7 @@ fun TextInputWithLabel(
             visualTransformation = if (isPassword && showPassword.value) PasswordVisualTransformation() else VisualTransformation.None,
             supportingText = {
                 if (!error?.trim().isNullOrEmpty())
-                    SubHeadingText(text = error.toString(), color = Alert, TextAlign.Start)
+                    BodyText3Text(text = error.toString(), color = Alert, TextAlign.Start)
             },
             textStyle = MaterialTheme.typography.bodyMedium.copy(labelColor),
             singleLine = true,
@@ -419,7 +517,7 @@ fun SocialMediaButton(icon: Int, onClick: () -> Unit) {
 @Composable
 fun ClickableText(label: String, labelColor: Color = PurplePlum, onClick: () -> Unit) {
     TextButton(onClick = { onClick() }) {
-        SubHeadingText(text = label, color = labelColor)
+        BodyText3Text(text = label, color = labelColor)
     }
 }
 
@@ -463,7 +561,7 @@ fun PasswordValidationComponent(label: String, isValid: Boolean) {
                 tint = Alert
             )
         Spacer(modifier = Modifier.width(8.dp))
-        SubHeadingText(
+        BodyText3Text(
             text = label,
             color = Color.DarkGray,
             TextAlign.Justify
@@ -471,20 +569,327 @@ fun PasswordValidationComponent(label: String, isValid: Boolean) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun BottomNavIcon(drawableId: Int, contentDescription: String) {
+    Icon(
+        painter = painterResource(id = drawableId),
+        contentDescription = contentDescription,
+        tint = Unspecified
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SquareIconButton(drawableId: Int, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(White)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(drawableId),
+            contentDescription = null,
+            tint = DarkGrey,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HealthStateCard(
+    modifier: Modifier = Modifier,
+    icon: Int,
+    id: Int,
+    cardColor: Color,
+    boxColor: Color,
+    vitalSignLabel: String,
+    vitalSignValue: String,
+    onClick: (Int) -> Unit
+) {
+    Card(
+        onClick = { onClick(id) },
+        colors = CardDefaults.cardColors(cardColor, contentColor = DustGrey),
+        modifier = modifier
+            .size(120.dp, 160.dp)
+    ) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Row(
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(boxColor),
+                    contentAlignment = Alignment.Center
+
+                ) {
+                    Icon(
+                        painter = painterResource(id = icon),
+                        contentDescription = null, tint = White, modifier = Modifier.padding(6.dp)
+                    )
+                }
+                Icon(
+                    painter = painterResource(id = R.drawable.arrow_long_right),
+                    contentDescription = null, tint = DeepBlue, modifier = Modifier.padding()
+                )
+            }
+            Column(Modifier.fillMaxWidth()) {
+                BodyText3Text(text = vitalSignLabel)
+                Headline3(text = vitalSignValue, color = DeepBlue)
+
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ToDoListCard(
+    modifier: Modifier = Modifier,
+    icon: Int,
+    id: Int,
+    cardColor: Color,
+    label: String,
+    itemName: String,
+    progress: Float,
+    onClick: (Int) -> Unit
+) {
+    Card(
+        onClick = { onClick(id) },
+        colors = CardDefaults.cardColors(cardColor, contentColor = DustGrey),
+        modifier = modifier
+            .wrapContentSize()
+            .fillMaxWidth()
+    ) {
+        Row(
+            Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(32.dp)
+            )
+            Column(
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                Headline3(
+                    text = itemName,
+                    color = DeepBlue,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start
+                )
+                if (progress in 0.1f..99.9f)
+                    OutlinedButtonPurple(Modifier.padding(16.dp, 0.dp), text = label) {
+
+                    }
+                else {
+                    BodyText3Text(
+                        text = label,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Start
+                    )
+                }
+            }
+            when (progress) {
+                0f -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.checkbox_empty),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+
+                100f -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.checkbox_full),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+
+                else -> {
+                    Box(contentAlignment = Alignment.Center) {
+                        Image(
+                            painter = painterResource(id = R.drawable.percentage_progress),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+
+                            )
+                        CircularProgressIndicator(
+                            progress / 100,
+                            modifier = Modifier.size(36.dp),
+                            color = Turquoise,
+                            strokeWidth = 3.dp
+                        )
+                        Text(
+                            text = "${progress}%",
+
+                            // Percentages
+                            style = TextStyle(
+                                fontSize = 10.sp,
+                                lineHeight = 10.sp,
+                                fontFamily = FontFamily(
+                                    Font(
+                                        R.font.notosans_regular,
+                                        FontWeight.W600
+                                    )
+                                ),
+                                color = ColdGrey,
+                                letterSpacing = 0.02.sp,
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeHeaderRow(
+    headerText: String,
+    icon: Int,
+    label: String,
+    isClickable: Boolean = false,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(top = 40.dp, start = 24.dp, end = 24.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = headerText,
+            style = MaterialTheme.typography.headlineMedium.copy(DeepBlue),
+
+            )
+        Row(modifier = if (isClickable) Modifier
+            .clip(RoundedCornerShape(5.dp))
+            .clickable { onClick() } else Modifier
+        ) {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                tint = PurplePlum
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            BodyText3Text(label, color = PurplePlum)
+        }
+    }
+}
+
+@Composable
+fun Dialog(
+    onDismissRequest: () -> Unit,
+    onX: () -> Unit,
+    onActivity: () -> Unit,
+    onSupplement: () -> Unit
+) {
+    androidx.compose.ui.window.Dialog(
+        onDismissRequest = { onDismissRequest() },
+        DialogProperties(
+            dismissOnBackPress = false,
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize(),
+            color = PurplePlum.copy(0.4f)
+        ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(Modifier.size(312.dp, 306.dp), verticalArrangement = Center) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = End
+                    ) {
+                        SquareButton(
+                            Modifier.size(48.dp),
+                            color = White,
+                            icon = R.drawable.x,
+                            cornerCarve = 10
+                        ) {
+                            onX()
+                        }
+                    }
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(White, RoundedCornerShape(16.dp))
+                            .padding(16.dp)
+                            .weight(1f)
+                    ) {
+                        Column(
+                            Modifier
+                                .fillMaxSize(),
+                            verticalArrangement = SpaceEvenly,
+                            horizontalAlignment = CenterHorizontally
+                        ) {
+                            HeadLine2Text(text = "Choose task category")
+                            OutlinedButtonPurple(
+                                Modifier
+                                    .fillMaxWidth(),
+                                text = "Activity"
+                            ) {
+                                onActivity()
+                            }
+                            OutlinedButtonPurple(
+                                Modifier
+                                    .fillMaxWidth(),
+                                text = "Supplement"
+                            ) {
+                                onSupplement()
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = false)
 @Composable
 private fun PreviewFun() {
-//    RectanglePrimaryButton(label = "Let’s start") {
+//    ToDoListCard(
+//        icon = R.drawable.breath_rate,
+//        id = 0,
+//        cardColor = White,
+//        label = "Continue exercise",
+//        itemName = "Breath Rate", progress = 99f
+//    ) {
 //
 //    }
-//    HeadlineLarge(text = "Welcome to\nOneLook")
-//    SubHeadingText(text = "Just take a look and take action!")
-    TextInputWithLabel(
-        Modifier.padding(horizontal = 24.dp),
-        "Full Name",
-        labelColor = Color.DarkGray,
-        default = "",
-        isPassword = true,
-        error = null, leadingIcon = R.drawable.hide_password
-    ) {}
+//    HorizontalPagerScreen(Modifier) {}
+    Dialog({}, {}, {}) {}
 }

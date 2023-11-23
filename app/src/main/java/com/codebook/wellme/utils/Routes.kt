@@ -1,9 +1,14 @@
 package com.codebook.wellme.utils
 
+import com.codebook.wellme.utils.Routes.ACTIVITY_SCREEN
 import com.codebook.wellme.utils.Routes.EMAIL_SENT_SCREEN
 import com.codebook.wellme.utils.Routes.FORGET_PASSWORD_SCREEN
+import com.codebook.wellme.utils.Routes.HOME_SCREEN
 import com.codebook.wellme.utils.Routes.LOGIN_SCREEN
+import com.codebook.wellme.utils.Routes.MAIN_HOME_SCREEN
 import com.codebook.wellme.utils.Routes.ONBOARDING_SCREEN
+import com.codebook.wellme.utils.Routes.PROGRESS_SCREEN
+import com.codebook.wellme.utils.Routes.SETTINGS_SCREEN
 import com.codebook.wellme.utils.Routes.SIGNUP_SCREEN
 import com.codebook.wellme.utils.Routes.WELCOME_SCREEN
 
@@ -14,6 +19,12 @@ private object Routes {
     const val LOGIN_SCREEN = "LOGIN_SCREEN"
     const val FORGET_PASSWORD_SCREEN = "FORGET_PASSWORD_SCREEN"
     const val EMAIL_SENT_SCREEN = "EMAIL_SENT_SCREEN"
+    const val MAIN_HOME_SCREEN = "MAIN_HOME_SCREEN"
+
+    const val HOME_SCREEN = "HOME_SCREEN"
+    const val ACTIVITY_SCREEN = "ACTIVITY_SCREEN"
+    const val PROGRESS_SCREEN = "PROGRESS_SCREEN"
+    const val SETTINGS_SCREEN = "SETTINGS_SCREEN"
 }
 
 sealed class Screen(val destination: String) {
@@ -23,5 +34,10 @@ sealed class Screen(val destination: String) {
     object LoginScreen : Screen(LOGIN_SCREEN)
     object ForgetPasswordScreen : Screen(FORGET_PASSWORD_SCREEN)
     object EmailSentScreen : Screen(EMAIL_SENT_SCREEN)
+    object HomeScreen : Screen(HOME_SCREEN)
+    object MainHomeScreen : Screen(MAIN_HOME_SCREEN)
+    object ActivityScreen : Screen(ACTIVITY_SCREEN)
+    object ProgressScreen : Screen(PROGRESS_SCREEN)
+    object SettingsScreen : Screen(SETTINGS_SCREEN)
 
 }

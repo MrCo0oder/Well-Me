@@ -1,4 +1,4 @@
-package com.codebook.wellme.ui.screens.forgetPassword
+package com.codebook.wellme.ui.screens.authCycle.forgetPassword
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1086976314887-uj0hkvpeog1d6aau2t28bl7d3mcg4fji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codebook.wellme",
+            "certificate_hash": "6c9e0c9fb452f2a734970c0d2edfd7bbc07e1e65"
+          }
+        },
+        {
           "client_id": "1086976314887-g8g4udauc5di5fvnmtlgg4sib4gtc227.apps.googleusercontent.com",
           "client_type": 3
         }

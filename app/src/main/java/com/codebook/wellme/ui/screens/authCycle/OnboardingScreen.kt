@@ -1,9 +1,10 @@
-package com.codebook.wellme.ui.screens
+package com.codebook.wellme.ui.screens.authCycle
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -36,15 +37,20 @@ fun OnboardingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                HorizontalPagerScreen(Modifier.weight(1f)) {
-                    navController.navigate(Screen.SignUpScreen.destination)
+                HorizontalPagerScreen(Modifier.weight(1f).fillMaxWidth()) {
+                    navigateToSignUpScreen(navController)
                 }
             }
-            OutlinedButtonPurple { navController.navigate(Screen.SignUpScreen.destination) }
+            OutlinedButtonPurple(Modifier.padding(vertical = 8.dp, horizontal = 16.dp), buttonModifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp),text = "Skip Intro") { navigateToSignUpScreen(navController) }
         }
     }
 }
 
+private fun navigateToSignUpScreen(navController: NavHostController) {
+    navController.navigate(Screen.SignUpScreen.destination) {
+        popUpTo(Screen.OnBoardingScreen.destination) { inclusive = true }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

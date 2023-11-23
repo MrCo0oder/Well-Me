@@ -78,18 +78,16 @@ dependencies {
     //viewpager
     implementation("androidx.compose.foundation:foundation:1.5.4")
 //    //firebase
-//    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
-//    implementation("com.google.firebase:firebase-auth")
-//    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("androidx.compose.runtime:runtime:1.4.3")
-    implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
+    implementation("androidx.compose.runtime:runtime:1.5.4")
+//    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
-    implementation ("androidx.core:core-splashscreen:1.0.0-beta02")
-    implementation("com.google.firebase:firebase-auth:22.3.0")
-    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
 
 }

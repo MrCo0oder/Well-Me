@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.codebook.wellme.ui.screens.signup
+package com.codebook.wellme.ui.screens.authCycle.signup
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.codebook.wellme.R
 import com.codebook.wellme.model.signup.CreateAccountStateUiEvents
 import com.codebook.wellme.ui.ClickableText
@@ -54,9 +55,10 @@ import com.codebook.wellme.ui.HeadlineLarge
 import com.codebook.wellme.ui.PasswordValidationComponent
 import com.codebook.wellme.ui.RectanglePrimaryButton
 import com.codebook.wellme.ui.SocialMediaButton
-import com.codebook.wellme.ui.SubHeadingText
+import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.ui.TextInputWithLabel
 import com.codebook.wellme.ui.theme.DeepBlue
+import com.codebook.wellme.utils.Constants
 import com.codebook.wellme.utils.Constants.AT_LEAST_NUM_OR_CHAR_PATTERN
 import com.codebook.wellme.utils.Constants.UPPER_LOWER_PATTERN
 import com.codebook.wellme.utils.GoogleAuthUiClient
@@ -70,15 +72,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUpScreen(navController: NavController) {
     val viewModel: CreateAccountViewModel = viewModel()
-//    val signInGoogleViewModel: SignInGoogleViewModel = viewModel(
-//        factory = SignInGoogleViewModelFactory(LocalContext.current.applicationContext as Application)
-//    )//        signInGoogleViewModel,
     val signInViewModel: SignInViewModel = viewModel()
-    SignUpScreenContent(
-        navController, viewModel,
-
-        signInViewModel
-    )
+    SignUpScreenContent(navController, viewModel, signInViewModel)
 }
 
 
@@ -91,19 +86,15 @@ private fun SignUpScreenContent(
     signViewModel: SignInViewModel,
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-    val signInRequestCode = 1
-//    val state = signInViewModel.googleUser.observeAsState()
-//    val user = state.value
     val googleState by signViewModel.userState.collectAsState()
-    val c = LocalContext.current.applicationContext
+    val context = LocalContext.current.applicationContext
     val scope = rememberCoroutineScope()
     val googleAuthClient by lazy {
         GoogleAuthUiClient(
-            c,
-            Identity.getSignInClient(c)
+            context,
+            Identity.getSignInClient(context)
         )
     }
-    val isError = remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = { result ->
@@ -112,41 +103,11 @@ private fun SignUpScreenContent(
                     val signInResult = googleAuthClient.signInWithIntent(
                         intent = result.data ?: return@launch
                     )
-                    Log.d("SignUpScreenContent", result.data.toString())
                     signViewModel.onSignInResult(signInResult)
                 }
             }
         }
     )
-    LaunchedEffect(key1 = googleState.isSignInSuccessful) {
-        if (googleState.isSignInSuccessful) {
-            Toast.makeText(c, "Sign in successful", Toast.LENGTH_LONG).show()
-            signViewModel.resetState()
-        }
-    }
-    LaunchedEffect(key1 = googleState.signInError) {
-        googleState.signInError?.let { error ->
-            Toast.makeText(
-                c,
-                error,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-//    val authResultLauncher =
-//        rememberLauncherForActivityResult(contract = GoogleApiContract()) { task ->
-//            try {
-//                val gsa = task?.getResult(ApiException::class.java)
-//
-//                if (gsa != null) {
-//                    signInViewModel.fetchSignInUser(gsa.email, gsa.displayName)
-//                } else {
-//                    isError.value = true
-//                }
-//            } catch (e: ApiException) {
-//                e.printStackTrace()
-//            }
-//        }
     Scaffold(
         Modifier
             .background(White)
@@ -193,7 +154,7 @@ private fun SignUpScreenContent(
                 labelColor = DarkGray,
                 placeholder = stringResource(R.string.place_the_password_here),
                 default = uiState.password,
-                error = uiState.password.validatePassword(withMessage = false),
+                error = if (uiState.password.validateWithRegex(Constants.PASSWORD_PATTERN)) null else "  ",
                 isPassword = true,
                 leadingIcon = R.drawable.lock, keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
@@ -230,7 +191,7 @@ private fun SignUpScreenContent(
 
                 CustomCheckbox(checkBox) { }
                 Spacer(modifier = Modifier.width(8.dp))
-                SubHeadingText(
+                BodyText3Text(
                     text = stringResource(R.string.by_continuing_you_accept_our_privacy_policy_and_term_of_use),
                     color = DarkGray,
                     TextAlign.Justify
@@ -240,7 +201,9 @@ private fun SignUpScreenContent(
                 label = stringResource(R.string.sign_up),
                 isEnabled = viewModel.isScreenValid() && checkBox.value
             ) {
-//                navController.navigate(Screen.OnBoardingScreen.destination)
+                navController.navigate(Screen.MainHomeScreen.destination) {
+                    popUpTo(Screen.SignUpScreen.destination) { inclusive = true }
+                }
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -252,7 +215,7 @@ private fun SignUpScreenContent(
                         .height(1.dp)
                         .weight(1f)
                 )
-                SubHeadingText(text = stringResource(R.string.or), color = DeepBlue)
+                BodyText3Text(text = stringResource(R.string.or), color = DeepBlue)
                 Box(
                     modifier = Modifier
                         .background(LightGray)
@@ -266,12 +229,6 @@ private fun SignUpScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 SocialMediaButton(icon = R.drawable.google) {
-//                    authResultLauncher.launch(signInRequestCode)
-//                    viewModel.apply {
-//                        onEvent(CreateAccountStateUiEvents.Name(user?.name.toString()))
-//                        onEvent(CreateAccountStateUiEvents.Email(user?.email.toString()))
-//                        Log.d("SignUpScreenContent: ", user.toString())
-//                    }
                     scope.launch {
                         val signInIntentSender = googleAuthClient.signIn()
                         launcher.launch(
@@ -286,15 +243,20 @@ private fun SignUpScreenContent(
                 }
             }
             LaunchedEffect(key1 = googleState.isSignInSuccessful) {
-                if (googleState.isSignInSuccessful)
+                if (googleState.isSignInSuccessful) {
                     Toast.makeText(
-                        c,
+                        context,
                         googleAuthClient.getSignedInUser().toString(),
                         Toast.LENGTH_SHORT
                     ).show()
-                else
+                    Log.i("User Info :", googleAuthClient.getSignedInUser().toString())
+//                    signViewModel.resetState()
+                }
+            }
+            LaunchedEffect(key1 = googleState.signInError) {
+                if (!googleState.signInError.isNullOrEmpty())
                     Toast.makeText(
-                        c,
+                        context,
                         googleState.signInError.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
@@ -302,31 +264,25 @@ private fun SignUpScreenContent(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                SubHeadingText(
+                BodyText3Text(
                     text = stringResource(R.string.already_have_an_account),
                     color = DeepBlue
                 )
                 ClickableText(label = stringResource(R.string.login)) {
                     navController.navigate(Screen.LoginScreen.destination) {
-                        popUpTo(Screen.SignUpScreen.destination) { inclusive = true }
+                        popUpTo(Screen.SignUpScreen.destination) { inclusive = false }
                     }
                 }
             }
             Spacer(modifier = Modifier.height(60.dp))
         }
     }
-    LaunchedEffect(key1 = uiState) {
-
-    }
-
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewFun() {
-//    SignUpScreenContent(
-//        navController = rememberNavController(),
-//        viewModel = viewModel(),
-//        signInViewModel = null
-//    )userData: (Pair<String, String>) -> Unit
+    SignUpScreenContent(
+        navController = rememberNavController(), viewModel(), viewModel()
+    )
 }

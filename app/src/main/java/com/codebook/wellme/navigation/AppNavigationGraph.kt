@@ -1,15 +1,16 @@
-package com.codebook.wellme
+package com.codebook.wellme.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.codebook.wellme.ui.screens.forgetPassword.EmailSentScreen
-import com.codebook.wellme.ui.screens.forgetPassword.ForgetPasswordScreen
-import com.codebook.wellme.ui.screens.login.LoginScreen
-import com.codebook.wellme.ui.screens.OnboardingScreen
-import com.codebook.wellme.ui.screens.WelcomeScreen
-import com.codebook.wellme.ui.screens.signup.SignUpScreen
+import com.codebook.wellme.ui.screens.authCycle.forgetPassword.EmailSentScreen
+import com.codebook.wellme.ui.screens.authCycle.forgetPassword.ForgetPasswordScreen
+import com.codebook.wellme.ui.screens.authCycle.login.LoginScreen
+import com.codebook.wellme.ui.screens.authCycle.OnboardingScreen
+import com.codebook.wellme.ui.screens.authCycle.WelcomeScreen
+import com.codebook.wellme.ui.screens.authCycle.signup.SignUpScreen
+import com.codebook.wellme.ui.screens.home.MainHomeScreen
 import com.codebook.wellme.utils.Screen
 
 @Composable
@@ -37,6 +38,9 @@ fun AppNavigationGraph() {
         }
         composable(Screen.EmailSentScreen.destination) {
             EmailSentScreen(navController)
+        }
+        composable(Screen.MainHomeScreen.destination) {
+            MainHomeScreen(navController)
         }
         /*   composable(Screen.OnBoardingScreen.destination) {
                OnboardingScreen(mSignInViewModel, navController) {
@@ -91,24 +95,7 @@ fun AppNavigationGraph() {
            }
            composable(Screen.HabitsScreen.destination) {
                HabitsScreen(navController, createAccountViewModel)
-           }*/
+           }
+           */
     }
 }
-
-//@Composable
-//fun ChangeStatusBarColor(color: Color) {
-//    val view = LocalView.current
-//    val darkTheme = isSystemInDarkTheme()
-//    if (!view.isInEditMode) {
-//        SideEffect {
-//            val activity = view.context as Activity
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                activity.window.statusBarColor = color.toArgb()
-//                WindowCompat.getInsetsController(
-//                    activity.window,
-//                    view
-//                ).isAppearanceLightStatusBars = !darkTheme
-//            }
-//        }
-//    }
-//}

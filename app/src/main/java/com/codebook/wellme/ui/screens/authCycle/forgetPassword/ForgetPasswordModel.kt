@@ -1,4 +1,4 @@
-package com.codebook.wellme.ui.screens.forgetPassword
+package com.codebook.wellme.ui.screens.authCycle.forgetPassword
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel

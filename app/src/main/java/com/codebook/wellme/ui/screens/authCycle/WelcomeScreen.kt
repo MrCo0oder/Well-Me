@@ -1,4 +1,4 @@
-package com.codebook.wellme.ui.screens
+package com.codebook.wellme.ui.screens.authCycle
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.codebook.wellme.R
 import com.codebook.wellme.ui.HeadlineLarge
 import com.codebook.wellme.ui.RectanglePrimaryButton
-import com.codebook.wellme.ui.SubHeadingText
+import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.utils.Screen
 
 @Composable
@@ -61,7 +61,7 @@ fun WelcomeScreenContent(
                     .size(104.dp), contentScale = ContentScale.FillBounds
             )
             HeadlineLarge("Welcome to\nWell Me")
-            SubHeadingText("Just take a look and take action!")
+            BodyText3Text("Just take a look and take action!")
         }
     }
 }

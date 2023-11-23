@@ -1,4 +1,4 @@
-package com.codebook.wellme.ui.screens.signup
+package com.codebook.wellme.ui.screens.authCycle.signup
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel

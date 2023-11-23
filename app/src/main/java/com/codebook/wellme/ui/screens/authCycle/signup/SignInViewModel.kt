@@ -1,5 +1,6 @@
-package com.codebook.wellme.ui.screens.signup
+package com.codebook.wellme.ui.screens.authCycle.signup
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.codebook.wellme.model.signupWithGoogle.SignInResult
 import com.codebook.wellme.model.signupWithGoogle.SignInState
