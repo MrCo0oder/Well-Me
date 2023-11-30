@@ -48,7 +48,6 @@ fun LoginScreen(navController: NavHostController) {
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginScreenContent(navController: NavController, viewModel: LoginViewModel) {
     val uiState = viewModel.uiState.collectAsState().value
@@ -102,8 +101,10 @@ private fun LoginScreenContent(navController: NavController, viewModel: LoginVie
                 label = stringResource(R.string.login),
                 isEnabled = viewModel.isScreenValid()
             ) {
-                navController.navigate(Screen.MainHomeScreen.destination){
-                    popUpTo(Screen.LoginScreen.destination){inclusive=true}
+                navController.navigate(Screen.MainHomeScreen.destination) {
+                    popUpTo(Screen.LoginScreen.destination) {
+                        inclusive = true
+                    }
                 }
             }
             Row(

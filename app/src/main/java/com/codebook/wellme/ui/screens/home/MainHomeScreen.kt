@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -37,6 +38,7 @@ import com.codebook.wellme.R
 import com.codebook.wellme.navigation.HomeNavigationGraph
 import com.codebook.wellme.ui.BottomNavIcon
 import com.codebook.wellme.ui.theme.LilacPetals
+import com.codebook.wellme.ui.theme.PurplePlum
 import com.codebook.wellme.ui.theme.VioletLight
 import com.codebook.wellme.utils.Screen
 import kotlin.math.roundToInt
@@ -90,12 +92,12 @@ private fun HomeScreenContent(
             bottomBar = {
                 NavigationBar(
                     Modifier
-                        .clip(RoundedCornerShape(topEnd = 32.dp, topStart = 32.dp))
+                        .clip(RoundedCornerShape(/*topEnd = 32.dp, topStart = */32.dp))
                         .height(bottomBarHeight)
                         .offset(
                             x = 0.dp,
                             y = -bottomBarOffsetHeightPx.floatValue.roundToInt().dp
-                        ),
+                        ).shadow(elevation = 40.dp, spotColor = PurplePlum, ambientColor = PurplePlum),
                     containerColor = White
                 ) {
                     Spacer(modifier = Modifier.width(45.dp))

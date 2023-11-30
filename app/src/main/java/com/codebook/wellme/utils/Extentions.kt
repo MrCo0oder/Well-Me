@@ -1,6 +1,7 @@
 package com.codebook.wellme.utils
 
 import android.util.Patterns
+import java.util.Calendar
 import java.util.regex.Pattern
 
 fun String.validateEmail(): String? {
@@ -27,4 +28,10 @@ fun String.validateWithRegex(regex: String): Boolean {
     val pattern = Pattern.compile(regex)
     val matcher = pattern.matcher(this)
     return matcher.matches()
+}
+fun dateValidator(timeInMillis: Long): Boolean {
+    val endCalenderDate = Calendar.getInstance()
+    endCalenderDate.timeInMillis = timeInMillis
+    endCalenderDate.set(Calendar.DATE, Calendar.DATE )
+    return timeInMillis > Calendar.getInstance().timeInMillis && timeInMillis < endCalenderDate.timeInMillis
 }

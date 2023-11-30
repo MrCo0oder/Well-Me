@@ -270,7 +270,7 @@ private fun SignUpScreenContent(
                 )
                 ClickableText(label = stringResource(R.string.login)) {
                     navController.navigate(Screen.LoginScreen.destination) {
-                        popUpTo(Screen.SignUpScreen.destination) { inclusive = false }
+                        popUpTo(Screen.SignUpScreen.destination) { inclusive = true }
                     }
                 }
             }

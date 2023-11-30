@@ -1,5 +1,6 @@
 package com.codebook.wellme.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -29,12 +31,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -48,6 +55,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,8 +66,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
@@ -89,23 +99,23 @@ import com.codebook.wellme.ui.theme.LilacPetalsDark
 import com.codebook.wellme.ui.theme.PurplePlum
 import com.codebook.wellme.ui.theme.Turquoise
 import com.codebook.wellme.ui.theme.Violet
+import com.codebook.wellme.ui.theme.VioletLight
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 @Composable
 fun RectanglePrimaryButton(
-    modifier: Modifier = Modifier,
-    label: String,
-    isEnabled: Boolean = true,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier, label: String, isEnabled: Boolean = true, onClick: () -> Unit
 ) {
     ElevatedButton(
         onClick = { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PurplePlum,
-            disabledContainerColor = DustGrey
+            containerColor = PurplePlum, disabledContainerColor = DustGrey
         ),
-        modifier = modifier.fillMaxWidth(), enabled = isEnabled
+        modifier = modifier.fillMaxWidth(),
+        enabled = isEnabled
     ) {
         Row(
             modifier = Modifier
@@ -166,7 +176,8 @@ fun HeadLine2Text(
 
 @Composable
 fun HeadlineLarge(
-    text: String, color: Color = ColdGrey,
+    text: String,
+    color: Color = ColdGrey,
     textAlign: TextAlign = TextAlign.Center,
     modifier: Modifier = Modifier
 ) {
@@ -196,7 +207,8 @@ fun Headline3(
 
 @Composable
 fun BodyTextTwo(
-    text: String, color: Color = ColdGrey,
+    text: String,
+    color: Color = ColdGrey,
     textAlign: TextAlign = TextAlign.Center,
     modifier: Modifier = Modifier
 ) {
@@ -210,7 +222,8 @@ fun BodyTextTwo(
 
 @Composable
 fun ButtonTextTwo(
-    text: String, color: Color = ColdGrey,
+    text: String,
+    color: Color = ColdGrey,
     textAlign: TextAlign = TextAlign.Center,
     modifier: Modifier = Modifier
 ) {
@@ -240,8 +253,7 @@ fun HorizontalPagerScreen(modifier: Modifier, navigate: () -> Unit) {
         ) {
             Spacer(modifier = Modifier.height(15.dp))
             HorizontalPager(
-                modifier = modifier
-                    .fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 state = pagerState,
                 userScrollEnabled = true,
             ) { current ->
@@ -297,40 +309,22 @@ fun SquareButton(
     cornerCarve: Int = 20,
     navigate: () -> Unit
 ) {
-//    Button(
-//        onClick = {
-//            navigate()
-//        },
-//        modifier = modifier.wrapContentSize(),
-//        shape = RoundedCornerShape(cornerCarve.dp),
-//        colors = ButtonDefaults.elevatedButtonColors(containerColor = color)
-//    ) {
-//        Icon(
-//            painter = painterResource(id = icon),
-//            contentDescription = null, tint = Unspecified
-//        )
-//    }
     IconButton(
         onClick = {
             navigate()
         },
         modifier = modifier.clip(RoundedCornerShape(cornerCarve.dp)),
-        colors = IconButtonDefaults.iconButtonColors
-            (containerColor = color)
+        colors = IconButtonDefaults.iconButtonColors(containerColor = color)
     ) {
         Icon(
-            painter = painterResource(id = icon),
-            contentDescription = null, tint = Unspecified
+            painter = painterResource(id = icon), contentDescription = null, tint = Unspecified
         )
     }
 }
 
 @Composable
 fun OnBoardingComponent(
-    modifier: Modifier = Modifier,
-    image: Int,
-    header: String,
-    subHeading: String
+    modifier: Modifier = Modifier, image: Int, header: String, subHeading: String
 ) {
     Column(
         horizontalAlignment = CenterHorizontally,
@@ -365,19 +359,17 @@ fun Indicator(pagerState: PagerState) {
     ) {
         repeat(pagerState.pageCount) { iteration ->
             val color = if (pagerState.currentPage == iteration) PurplePlum else White
-            Box(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .width(70.dp)
-                    .height(6.dp)
-                    .clip(CircleShape)
-                    .background(color)
-                    .clickable {
-                        coroutineScope.launch {
-                            pagerState.scrollToPage(iteration)
-                        }
+            Box(modifier = Modifier
+                .padding(4.dp)
+                .width(70.dp)
+                .height(6.dp)
+                .clip(CircleShape)
+                .background(color)
+                .clickable {
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(iteration)
                     }
-            )
+                })
         }
     }
 }
@@ -409,9 +401,9 @@ fun TextInputWithLabel(
     error: String?,
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
-        imeAction = ImeAction.Next,
-        keyboardType = KeyboardType.Text
-    ), leadingIcon: Int,
+        imeAction = ImeAction.Next, keyboardType = KeyboardType.Text
+    ),
+    leadingIcon: Int? = null,
     onValueChange: (String) -> Unit
 ) {
     var value by remember {
@@ -429,13 +421,11 @@ fun TextInputWithLabel(
                 if (isPassword) {
                     value = it.trim()
                     onValueChange(it.trim())
-                    if (it.isNotEmpty())
-                        showIcon.value = true
+                    if (it.isNotEmpty()) showIcon.value = true
                 } else {
                     value = it
                     onValueChange(it)
-                    if (it.isNotEmpty())
-                        showIcon.value = true
+                    if (it.isNotEmpty()) showIcon.value = true
                 }
             },
             Modifier.fillMaxWidth(), maxLines = 1, isError = !error.isNullOrEmpty(),
@@ -449,16 +439,16 @@ fun TextInputWithLabel(
                 errorSupportingTextColor = Alert
             ),
             placeholder = {
-                Text(
-                    text = placeholder,
-                    style = MaterialTheme.typography.bodyMedium.copy(labelColor)
-                )
+                BodyTextTwo(text = placeholder, color = labelColor)
             },
             shape = RoundedCornerShape(20.dp),
             visualTransformation = if (isPassword && showPassword.value) PasswordVisualTransformation() else VisualTransformation.None,
             supportingText = {
-                if (!error?.trim().isNullOrEmpty())
-                    BodyText3Text(text = error.toString(), color = Alert, TextAlign.Start)
+                if (!error?.trim().isNullOrEmpty()) BodyText3Text(
+                    text = error.toString(),
+                    color = Alert,
+                    TextAlign.Start
+                )
             },
             textStyle = MaterialTheme.typography.bodyMedium.copy(labelColor),
             singleLine = true,
@@ -483,33 +473,43 @@ fun TextInputWithLabel(
                 }
             },
             leadingIcon = {
-                Icon(
-                    painter = painterResource(id = leadingIcon),
-                    contentDescription = null,
-                    tint = labelColor
-                )
-
+                if (leadingIcon != null) {
+                    Icon(
+                        painter = painterResource(id = leadingIcon),
+                        contentDescription = null,
+                        tint = labelColor
+                    )
+                }
             },
             keyboardOptions = if (isPassword) {
                 KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password
+                    imeAction = ImeAction.Done, keyboardType = KeyboardType.Password
                 )
-            } else
-                keyboardOptions,
+            } else keyboardOptions,
         )
     }
 }
 
 @Composable
+fun HDivider(modifier: Modifier = Modifier, color: Color = Color.LightGray) {
+    Box(
+        modifier = modifier
+            .background(color)
+            .height(1.dp)
+            .fillMaxWidth()
+    )
+}
+
+@Composable
 fun SocialMediaButton(icon: Int, onClick: () -> Unit) {
     OutlinedButton(
-        onClick = { onClick() }, modifier = Modifier.size(70.dp), border =
-        BorderStroke(1.dp, Color.LightGray), shape = RoundedCornerShape(20.dp)
+        onClick = { onClick() },
+        modifier = Modifier.size(70.dp),
+        border = BorderStroke(1.dp, Color.LightGray),
+        shape = RoundedCornerShape(20.dp)
     ) {
         Image(
-            painter = painterResource(id = icon),
-            contentDescription = null, Modifier.size(30.dp)
+            painter = painterResource(id = icon), contentDescription = null, Modifier.size(30.dp)
         )
     }
 }
@@ -526,17 +526,13 @@ fun CustomCheckbox(checkBox: MutableState<Boolean>, interactionSource: (Boolean)
     Checkbox(
         modifier = Modifier
             .border(
-                BorderStroke(1.dp, Color.DarkGray),
-                RoundedCornerShape(5.dp)
+                BorderStroke(1.dp, Color.DarkGray), RoundedCornerShape(5.dp)
             )
             .padding(4.dp)
-            .size(16.dp),
-        checked = checkBox.value,
-        onCheckedChange = {
+            .size(16.dp), checked = checkBox.value, onCheckedChange = {
             checkBox.value = it
             interactionSource(it)
-        },
-        colors = CheckboxDefaults.colors(
+        }, colors = CheckboxDefaults.colors(
             checkmarkColor = PurplePlum,
             checkedColor = Color.Transparent,
             uncheckedColor = Color.Transparent
@@ -547,24 +543,20 @@ fun CustomCheckbox(checkBox: MutableState<Boolean>, interactionSource: (Boolean)
 @Composable
 fun PasswordValidationComponent(label: String, isValid: Boolean) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        if (isValid)
-            Icon(
-                painter = painterResource(id = R.drawable.check),
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = Unspecified
-            ) else
-            Icon(
-                painter = painterResource(id = R.drawable.no_data),
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = Alert
-            )
+        if (isValid) Icon(
+            painter = painterResource(id = R.drawable.check),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = Unspecified
+        ) else Icon(
+            painter = painterResource(id = R.drawable.no_data),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = Alert
+        )
         Spacer(modifier = Modifier.width(8.dp))
         BodyText3Text(
-            text = label,
-            color = Color.DarkGray,
-            TextAlign.Justify
+            text = label, color = Color.DarkGray, TextAlign.Justify
         )
     }
 }
@@ -615,8 +607,7 @@ fun HealthStateCard(
     Card(
         onClick = { onClick(id) },
         colors = CardDefaults.cardColors(cardColor, contentColor = DustGrey),
-        modifier = modifier
-            .size(120.dp, 160.dp)
+        modifier = modifier.size(120.dp, 160.dp)
     ) {
         Column(
             Modifier
@@ -634,18 +625,21 @@ fun HealthStateCard(
                     modifier = Modifier
                         .size(44.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(boxColor),
-                    contentAlignment = Alignment.Center
+                        .background(boxColor), contentAlignment = Alignment.Center
 
                 ) {
                     Icon(
                         painter = painterResource(id = icon),
-                        contentDescription = null, tint = White, modifier = Modifier.padding(6.dp)
+                        contentDescription = null,
+                        tint = White,
+                        modifier = Modifier.padding(6.dp)
                     )
                 }
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_long_right),
-                    contentDescription = null, tint = DeepBlue, modifier = Modifier.padding()
+                    contentDescription = null,
+                    tint = DeepBlue,
+                    modifier = Modifier.padding()
                 )
             }
             Column(Modifier.fillMaxWidth()) {
@@ -675,6 +669,7 @@ fun ToDoListCard(
         modifier = modifier
             .wrapContentSize()
             .fillMaxWidth()
+            .shadow(elevation = 10.dp, spotColor = PurplePlum, ambientColor = PurplePlum)
     ) {
         Row(
             Modifier
@@ -700,10 +695,12 @@ fun ToDoListCard(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Start
                 )
-                if (progress in 0.1f..99.9f)
-                    OutlinedButtonPurple(Modifier.padding(16.dp, 0.dp), text = label) {
+                if (progress in 0.1f..99.9f) OutlinedButtonPurple(
+                    Modifier.padding(16.dp, 0.dp),
+                    text = label
+                ) {
 
-                    }
+                }
                 else {
                     BodyText3Text(
                         text = label,
@@ -754,8 +751,7 @@ fun ToDoListCard(
                                 lineHeight = 10.sp,
                                 fontFamily = FontFamily(
                                     Font(
-                                        R.font.notosans_regular,
-                                        FontWeight.W600
+                                        R.font.notosans_regular, FontWeight.W600
                                     )
                                 ),
                                 color = ColdGrey,
@@ -771,11 +767,7 @@ fun ToDoListCard(
 
 @Composable
 fun HomeHeaderRow(
-    headerText: String,
-    icon: Int,
-    label: String,
-    isClickable: Boolean = false,
-    onClick: () -> Unit
+    headerText: String, icon: Int, label: String, isClickable: Boolean = false, onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -791,12 +783,9 @@ fun HomeHeaderRow(
             )
         Row(modifier = if (isClickable) Modifier
             .clip(RoundedCornerShape(5.dp))
-            .clickable { onClick() } else Modifier
-        ) {
+            .clickable { onClick() } else Modifier) {
             Icon(
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                tint = PurplePlum
+                painter = painterResource(id = icon), contentDescription = null, tint = PurplePlum
             )
             Spacer(modifier = Modifier.width(8.dp))
             BodyText3Text(label, color = PurplePlum)
@@ -806,23 +795,17 @@ fun HomeHeaderRow(
 
 @Composable
 fun Dialog(
-    onDismissRequest: () -> Unit,
-    onX: () -> Unit,
-    onActivity: () -> Unit,
-    onSupplement: () -> Unit
+    onDismissRequest: () -> Unit, onX: () -> Unit, onActivity: () -> Unit, onSupplement: () -> Unit
 ) {
     androidx.compose.ui.window.Dialog(
-        onDismissRequest = { onDismissRequest() },
-        DialogProperties(
+        onDismissRequest = { onDismissRequest() }, DialogProperties(
             dismissOnBackPress = false,
             usePlatformDefaultWidth = false,
             decorFitsSystemWindows = false
         )
     ) {
         Surface(
-            modifier = Modifier
-                .fillMaxSize(),
-            color = PurplePlum.copy(0.4f)
+            modifier = Modifier.fillMaxSize(), color = PurplePlum.copy(0.4f)
         ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(Modifier.size(312.dp, 306.dp), verticalArrangement = Center) {
@@ -844,28 +827,26 @@ fun Dialog(
                     Column(
                         Modifier
                             .fillMaxWidth()
+                            .shadow(
+                                elevation = 40.dp, spotColor = PurplePlum, ambientColor = PurplePlum
+                            )
                             .background(White, RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .weight(1f)
                     ) {
                         Column(
-                            Modifier
-                                .fillMaxSize(),
+                            Modifier.fillMaxSize(),
                             verticalArrangement = SpaceEvenly,
                             horizontalAlignment = CenterHorizontally
                         ) {
                             HeadLine2Text(text = "Choose task category")
                             OutlinedButtonPurple(
-                                Modifier
-                                    .fillMaxWidth(),
-                                text = "Activity"
+                                Modifier.fillMaxWidth(), text = "Activity"
                             ) {
                                 onActivity()
                             }
                             OutlinedButtonPurple(
-                                Modifier
-                                    .fillMaxWidth(),
-                                text = "Supplement"
+                                Modifier.fillMaxWidth(), text = "Supplement"
                             ) {
                                 onSupplement()
                             }
@@ -876,6 +857,233 @@ fun Dialog(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectableCard(
+    modifier: Modifier, id: Int, isSelected: Boolean, label: String, onClick: (Int, Boolean) -> Unit
+) {
+    var selected = isSelected
+    Card(
+        onClick = {
+            if (selected) onClick(-1, true) else onClick(id, false)
+            selected = !selected
+        },
+        colors = CardDefaults.cardColors(LilacPetalsDark),
+        modifier = modifier.size(52.dp),
+        shape = CircleShape,
+        elevation = CardDefaults.cardElevation(1.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    shape = CircleShape,
+                    color = if (selected) PurplePlum else Color.Transparent
+                )
+                .fillMaxSize(), contentAlignment = Alignment.Center
+        ) {
+            Headline3(text = label, color = if (selected) DeepBlue else DarkGrey)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FormsSelectableCard(
+    modifier: Modifier,
+    id: Int,
+    isSelected: Boolean,
+    label: String,
+    icon: Int,
+    onClick: (Int, Boolean) -> Unit
+) {
+    var selected = isSelected
+    Column(Modifier.wrapContentSize()) {
+        Card(
+            onClick = {
+                if (selected) onClick(-1, true) else onClick(id, false)
+                selected = !selected
+            },
+            colors = CardDefaults.cardColors(LilacPetalsDark),
+            modifier = modifier.size(64.dp),
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(1.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        shape = RoundedCornerShape(20.dp),
+                        color = if (selected) PurplePlum else Color.Transparent
+                    )
+                    .fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = label,
+                    tint = if (selected) DeepBlue else DarkGrey,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        ButtonTextTwo(
+            text = label,
+            color = if (selected) DeepBlue else DarkGrey,
+            modifier = Modifier.width(64.dp)
+        )
+    }
+}
+
+@Composable
+fun CustomDropDown(
+    list: List<String> = listOf("Daily", "Weekly", "Monthly"),
+    onChange: (Int) -> Unit
+) {
+    var mExpanded by remember { mutableStateOf(false) }
+    var selectedElement by remember { mutableStateOf(list[0]) }
+    LaunchedEffect(key1 = selectedElement) {
+        onChange(list.indexOf(selectedElement))
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(LilacPetals, RoundedCornerShape(20.dp))
+            .wrapContentHeight()
+            .border(
+                1.dp,
+                color = if (mExpanded) PurplePlum else LilacPetalsDark,
+                RoundedCornerShape(20.dp)
+            )
+
+    ) {
+        Column(
+            Modifier.padding(vertical = 13.dp, horizontal = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(13.dp)
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(20.dp))
+                    .clickable { mExpanded = !mExpanded }
+                    .padding(vertical = 5.dp, horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BodyTextTwo(text = selectedElement)
+                if (mExpanded)
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_collapse),
+                        contentDescription = null, tint = Unspecified
+                    ) else Icon(
+                    painter = painterResource(id = R.drawable.arrow_down),
+                    contentDescription = null, tint = Unspecified
+                )
+            }
+            AnimatedVisibility(visible = mExpanded) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(13.dp)
+                ) {
+                    list.forEach { s ->
+                        HDivider(color = Violet)
+                        BodyTextTwo(
+                            text = s,
+                            DeepBlue,
+                            textAlign = TextAlign.Start,
+                            modifier = if (s == selectedElement) Modifier
+                                .background(
+                                    VioletLight,
+                                    RoundedCornerShape(6.dp)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                            else
+                                Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .clickable {
+                                        selectedElement = s
+                                        mExpanded = !mExpanded
+                                    }
+                                    .padding(horizontal = 8.dp, vertical = 3.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateRangePickerSample(
+    state: DateRangePickerState,
+    onClick: () -> Unit
+) {
+    DateRangePicker(
+        state,
+        modifier = Modifier,
+        title = {
+            HeadLine2Text(text ="")
+        },
+        dateFormatter = DatePickerDefaults.dateFormatter("MMM YYYY", "dd MM yyyy", "dd MM yyyy"),
+        headline = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Box(Modifier.weight(1f)) {
+                    (if (state.selectedStartDateMillis != null) state.selectedStartDateMillis?.let {
+                        getFormattedDate(
+                            it
+                        )
+                    } else "Start Date")?.let { ButtonTextTwo(text = it) }
+                }
+                Box(Modifier.weight(1f)) {
+                    (if (state.selectedEndDateMillis != null) state.selectedEndDateMillis?.let {
+                        getFormattedDate(
+                            it
+                        )
+                    } else "End Date")?.let { ButtonTextTwo(text = it) }
+                }
+                Box(
+                    Modifier
+                        .weight(0.2f)
+                        .clickable { onClick() }) {
+                    Icon(Icons.Default.Check, contentDescription = "Okk", tint = PurplePlum)
+                }
+
+            }
+        },
+        showModeToggle = false,
+        colors = DatePickerDefaults.colors(
+            containerColor = Turquoise,
+            titleContentColor = PurplePlum,
+            headlineContentColor = PurplePlum,
+            weekdayContentColor = Black,
+            subheadContentColor = Black,
+            currentYearContentColor = Color.Red,
+            selectedYearContainerColor = Color.Red,
+            disabledDayContentColor = Color.Gray,
+            todayDateBorderColor = Turquoise,
+            todayContentColor = Turquoise,
+            dayInSelectionRangeContainerColor = VioletLight,
+            dayInSelectionRangeContentColor = Black,
+            selectedDayContainerColor = Violet
+        )
+    )
+}
+
+fun getFormattedDate(timeInMillis: Long): String {
+    val calender = Calendar.getInstance()
+    calender.timeInMillis = timeInMillis
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+    return dateFormat.format(calender.timeInMillis)
 }
 
 @Preview(showBackground = false)
@@ -891,5 +1099,25 @@ private fun PreviewFun() {
 //
 //    }
 //    HorizontalPagerScreen(Modifier) {}
-    Dialog({}, {}, {}) {}
+//    Dialog({}, {}, {}) {}
+//    FormsSelectableCard(
+//        Modifier,
+//        0,
+//        true,
+//        "1",
+//        R.drawable.pill
+//    ) { _, _ -> }
+//    TextInputWithLabel(
+//        label = stringResource(R.string.supplement_name),
+//        labelColor = Color.DarkGray,
+//        placeholder = stringResource(R.string.type_name_of_the_supplement),
+//        default = /*uiState.email*/"",
+//        error = /*uiState.email.validateEmail()*/"",
+//        keyboardOptions = KeyboardOptions(
+//            imeAction = ImeAction.Next,
+//            keyboardType = KeyboardType.Email
+//        ), modifier = Modifier.fillMaxWidth()
+//    ) {
+////                viewModel.onEvent(LoginStateUiEvents.Email(it))
+//    }
 }

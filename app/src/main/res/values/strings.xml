@@ -25,4 +25,7 @@
     <string name="you_will_receive_a_link_to_confirm_the_password_change_to_the_e_mail_address_provided">You will receive a link to confirm the password change to the e-mail address provided</string>
     <string name="confirm_e_mail">Confirm e-mail</string>
     <string name="check_your_email_inbox_to_reset_your_password">Check Your Email Inbox\nTo Reset Your Password</string>
+    <string name="add_supplement">Add Supplement</string>
+    <string name="supplement_name">Supplement Name</string>
+    <string name="type_name_of_the_supplement">Type name of the supplement</string>
 </resources>

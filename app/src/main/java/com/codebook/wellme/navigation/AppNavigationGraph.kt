@@ -11,6 +11,7 @@ import com.codebook.wellme.ui.screens.authCycle.OnboardingScreen
 import com.codebook.wellme.ui.screens.authCycle.WelcomeScreen
 import com.codebook.wellme.ui.screens.authCycle.signup.SignUpScreen
 import com.codebook.wellme.ui.screens.home.MainHomeScreen
+import com.codebook.wellme.ui.screens.home.homeScreen.addSupplement.AddSupplementScreen
 import com.codebook.wellme.utils.Screen
 
 @Composable
@@ -20,7 +21,10 @@ fun AppNavigationGraph() {
 //    val mSignInViewModel: SignInGoogleViewModel = viewModel(
 //        factory = SignInGoogleViewModelFactory(LocalContext.current.applicationContext as Application)
 //    )
-    NavHost(navController = navController, startDestination = Screen.WelcomeScreen.destination) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.WelcomeScreen.destination
+    ) {
         composable(Screen.WelcomeScreen.destination) {
             WelcomeScreen(navController)
         }
@@ -42,6 +46,10 @@ fun AppNavigationGraph() {
         composable(Screen.MainHomeScreen.destination) {
             MainHomeScreen(navController)
         }
+        composable(Screen.AddSupplementScreen.destination) {
+            AddSupplementScreen(navController)
+        }
+
         /*   composable(Screen.OnBoardingScreen.destination) {
                OnboardingScreen(mSignInViewModel, navController) {
                    navController.navigate(buildString {
