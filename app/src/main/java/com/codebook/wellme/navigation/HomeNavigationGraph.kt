@@ -8,7 +8,6 @@ import com.codebook.wellme.ui.screens.home.activity.ActivityScreen
 import com.codebook.wellme.ui.screens.home.homeScreen.HomeScreen
 import com.codebook.wellme.ui.screens.home.progress.ProgressScreen
 import com.codebook.wellme.ui.screens.home.settings.SettingsScreen
-import com.codebook.wellme.utils.Screen
 
 @Composable
 fun HomeNavigationGraph(navController :NavHostController,mainNavController :NavHostController) {

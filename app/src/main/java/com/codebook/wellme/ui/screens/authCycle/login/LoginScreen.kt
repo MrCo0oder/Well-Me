@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,7 +36,7 @@ import com.codebook.wellme.ui.SocialMediaButton
 import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.ui.TextInputWithLabel
 import com.codebook.wellme.ui.theme.DeepBlue
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 import com.codebook.wellme.utils.validateEmail
 import com.codebook.wellme.utils.validatePassword
 

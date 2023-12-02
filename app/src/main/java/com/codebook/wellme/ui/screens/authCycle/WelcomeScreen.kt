@@ -22,7 +22,7 @@ import com.codebook.wellme.R
 import com.codebook.wellme.ui.HeadlineLarge
 import com.codebook.wellme.ui.RectanglePrimaryButton
 import com.codebook.wellme.ui.BodyText3Text
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 
 @Composable
 fun WelcomeScreen(

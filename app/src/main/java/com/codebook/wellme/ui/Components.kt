@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -607,8 +609,8 @@ fun HealthStateCard(
     Card(
         onClick = { onClick(id) },
         colors = CardDefaults.cardColors(cardColor, contentColor = DustGrey),
-        modifier = modifier.size(120.dp, 160.dp)
-    ) {
+        modifier = modifier.size(120.dp, 160.dp), enabled = false,
+        ) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -1028,7 +1030,7 @@ fun DateRangePickerSample(
         state,
         modifier = Modifier,
         title = {
-            HeadLine2Text(text ="")
+            HeadLine2Text(text = "")
         },
         dateFormatter = DatePickerDefaults.dateFormatter("MMM YYYY", "dd MM yyyy", "dd MM yyyy"),
         headline = {
@@ -1086,6 +1088,54 @@ fun getFormattedDate(timeInMillis: Long): String {
     return dateFormat.format(calender.timeInMillis)
 }
 
+@Composable
+fun ActivitySelectableCard(
+    modifier: Modifier,
+    id: Int,
+    isSelected: Boolean,
+    label: String,
+    icon: Int,
+    onClick: (Int, Boolean) -> Unit
+) {
+    var selected = isSelected
+    Column(Modifier.wrapContentSize()) {
+        Card(
+            onClick = {
+                if (selected) onClick(-1, true) else onClick(id, false)
+                selected = !selected
+            },
+            colors = CardDefaults.cardColors(LilacPetalsDark),
+            modifier = modifier.size(66.dp),
+            shape = CircleShape,
+            elevation = CardDefaults.cardElevation(1.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 4.dp,
+                        shape = CircleShape,
+                        color = if (selected) Violet else Color.Transparent
+                    )
+                    .fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = label,
+                    tint = if (selected) ColdGrey else Violet,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        ButtonTextTwo(
+            text = label,
+            color = if (selected) DeepBlue else DarkGrey,
+            modifier = Modifier.width(66.dp)
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
 @Preview(showBackground = false)
 @Composable
 private fun PreviewFun() {
@@ -1100,13 +1150,13 @@ private fun PreviewFun() {
 //    }
 //    HorizontalPagerScreen(Modifier) {}
 //    Dialog({}, {}, {}) {}
-//    FormsSelectableCard(
-//        Modifier,
-//        0,
-//        true,
-//        "1",
-//        R.drawable.pill
-//    ) { _, _ -> }
+    ActivitySelectableCard(
+        Modifier,
+        0,
+        true,
+        "1",
+        R.drawable.pill
+    ) { _, _ -> }
 //    TextInputWithLabel(
 //        label = stringResource(R.string.supplement_name),
 //        labelColor = Color.DarkGray,
@@ -1120,4 +1170,7 @@ private fun PreviewFun() {
 //    ) {
 ////                viewModel.onEvent(LoginStateUiEvents.Email(it))
 //    }
+    FlowRow {
+
+    }
 }

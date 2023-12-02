@@ -35,11 +35,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,7 +72,7 @@ import com.codebook.wellme.ui.theme.DeepBlue
 import com.codebook.wellme.ui.theme.LilacPetals
 import com.codebook.wellme.ui.theme.LilacPetalsDark
 import com.codebook.wellme.ui.theme.PurplePlum
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

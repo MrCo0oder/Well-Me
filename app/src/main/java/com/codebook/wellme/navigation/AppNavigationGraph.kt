@@ -11,8 +11,8 @@ import com.codebook.wellme.ui.screens.authCycle.OnboardingScreen
 import com.codebook.wellme.ui.screens.authCycle.WelcomeScreen
 import com.codebook.wellme.ui.screens.authCycle.signup.SignUpScreen
 import com.codebook.wellme.ui.screens.home.MainHomeScreen
+import com.codebook.wellme.ui.screens.home.homeScreen.addActivity.AddActivityScreen
 import com.codebook.wellme.ui.screens.home.homeScreen.addSupplement.AddSupplementScreen
-import com.codebook.wellme.utils.Screen
 
 @Composable
 fun AppNavigationGraph() {
@@ -23,7 +23,7 @@ fun AppNavigationGraph() {
 //    )
     NavHost(
         navController = navController,
-        startDestination = Screen.WelcomeScreen.destination
+        startDestination = Screen.ActivityScreen.destination
     ) {
         composable(Screen.WelcomeScreen.destination) {
             WelcomeScreen(navController)
@@ -48,6 +48,9 @@ fun AppNavigationGraph() {
         }
         composable(Screen.AddSupplementScreen.destination) {
             AddSupplementScreen(navController)
+        }
+        composable(Screen.ActivityScreen.destination) {
+            AddActivityScreen(navController)
         }
 
         /*   composable(Screen.OnBoardingScreen.destination) {

@@ -35,7 +35,7 @@ import com.codebook.wellme.ui.HeadlineLarge
 import com.codebook.wellme.ui.RectanglePrimaryButton
 import com.codebook.wellme.ui.TextInputWithLabel
 import com.codebook.wellme.ui.theme.DarkGrey
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 import com.codebook.wellme.utils.validateEmail
 
 @Composable

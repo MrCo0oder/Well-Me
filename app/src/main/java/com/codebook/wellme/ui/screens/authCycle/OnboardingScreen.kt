@@ -18,7 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.codebook.wellme.ui.HorizontalPagerScreen
 import com.codebook.wellme.ui.OutlinedButtonPurple
 import com.codebook.wellme.ui.theme.VioletLight
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

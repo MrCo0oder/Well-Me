@@ -1,17 +1,18 @@
-package com.codebook.wellme.utils
+package com.codebook.wellme.navigation
 
-import com.codebook.wellme.utils.Routes.ACTIVITY_SCREEN
-import com.codebook.wellme.utils.Routes.ADDS_SUPPLEMENT_SCREEN
-import com.codebook.wellme.utils.Routes.EMAIL_SENT_SCREEN
-import com.codebook.wellme.utils.Routes.FORGET_PASSWORD_SCREEN
-import com.codebook.wellme.utils.Routes.HOME_SCREEN
-import com.codebook.wellme.utils.Routes.LOGIN_SCREEN
-import com.codebook.wellme.utils.Routes.MAIN_HOME_SCREEN
-import com.codebook.wellme.utils.Routes.ONBOARDING_SCREEN
-import com.codebook.wellme.utils.Routes.PROGRESS_SCREEN
-import com.codebook.wellme.utils.Routes.SETTINGS_SCREEN
-import com.codebook.wellme.utils.Routes.SIGNUP_SCREEN
-import com.codebook.wellme.utils.Routes.WELCOME_SCREEN
+import com.codebook.wellme.navigation.Routes.ACTIVITY_SCREEN
+import com.codebook.wellme.navigation.Routes.ADDS_SUPPLEMENT_SCREEN
+import com.codebook.wellme.navigation.Routes.ADD_ACTIVITY_SCREEN
+import com.codebook.wellme.navigation.Routes.EMAIL_SENT_SCREEN
+import com.codebook.wellme.navigation.Routes.FORGET_PASSWORD_SCREEN
+import com.codebook.wellme.navigation.Routes.HOME_SCREEN
+import com.codebook.wellme.navigation.Routes.LOGIN_SCREEN
+import com.codebook.wellme.navigation.Routes.MAIN_HOME_SCREEN
+import com.codebook.wellme.navigation.Routes.ONBOARDING_SCREEN
+import com.codebook.wellme.navigation.Routes.PROGRESS_SCREEN
+import com.codebook.wellme.navigation.Routes.SETTINGS_SCREEN
+import com.codebook.wellme.navigation.Routes.SIGNUP_SCREEN
+import com.codebook.wellme.navigation.Routes.WELCOME_SCREEN
 
 private object Routes {
     const val WELCOME_SCREEN = "WELCOME_SCREEN"
@@ -26,7 +27,8 @@ private object Routes {
     const val ACTIVITY_SCREEN = "ACTIVITY_SCREEN"
     const val PROGRESS_SCREEN = "PROGRESS_SCREEN"
     const val SETTINGS_SCREEN = "SETTINGS_SCREEN"
-    const val ADDS_SUPPLEMENT_SCREEN = "ADDS_SUPPLEMENT_SCREEN"
+    const val ADDS_SUPPLEMENT_SCREEN = "ADD_SUPPLEMENT_SCREEN"
+    const val ADD_ACTIVITY_SCREEN = "ADD_ACTIVITY_SCREEN"
 }
 
 sealed class Screen(val destination: String) {
@@ -42,5 +44,6 @@ sealed class Screen(val destination: String) {
     object ProgressScreen : Screen(PROGRESS_SCREEN)
     object SettingsScreen : Screen(SETTINGS_SCREEN)
     object AddSupplementScreen : Screen(ADDS_SUPPLEMENT_SCREEN)
+    object AddActivityScreen : Screen(ADD_ACTIVITY_SCREEN)
 
 }

@@ -39,7 +39,7 @@ import com.codebook.wellme.ui.theme.Violet
 import com.codebook.wellme.ui.theme.VioletLight
 import com.codebook.wellme.ui.theme.Water
 import com.codebook.wellme.ui.theme.WaterLight
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 
 @Composable
 fun HomeScreen(navController: NavHostController, mainNavController: NavHostController) {
@@ -244,6 +244,7 @@ fun HomeScreen(navController: NavHostController, mainNavController: NavHostContr
                 setShowDialog(false)
             }, {
                 setShowDialog(false)
+                mainNavController.navigate(Screen.ActivityScreen.destination)
             }, {
                 setShowDialog(false)
                 mainNavController.navigate(Screen.AddSupplementScreen.destination)

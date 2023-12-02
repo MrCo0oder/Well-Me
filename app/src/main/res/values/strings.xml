@@ -28,4 +28,9 @@
     <string name="add_supplement">Add Supplement</string>
     <string name="supplement_name">Supplement Name</string>
     <string name="type_name_of_the_supplement">Type name of the supplement</string>
+    <string name="choose_the_type_of_activity">Choose the type of activity</string>
+    <string name="add_activity">Add Activity</string>
+    <string name="activity_duration">Activity duration</string>
+    <string name="hours_minutes">(hours/minutes)</string>
+    <string name="time_of_day">Time of day</string>
 </resources>

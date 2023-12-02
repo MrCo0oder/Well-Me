@@ -49,22 +49,21 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.codebook.wellme.R
 import com.codebook.wellme.model.signup.CreateAccountStateUiEvents
+import com.codebook.wellme.navigation.Screen
+import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.ui.ClickableText
 import com.codebook.wellme.ui.CustomCheckbox
 import com.codebook.wellme.ui.HeadlineLarge
 import com.codebook.wellme.ui.PasswordValidationComponent
 import com.codebook.wellme.ui.RectanglePrimaryButton
 import com.codebook.wellme.ui.SocialMediaButton
-import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.ui.TextInputWithLabel
 import com.codebook.wellme.ui.theme.DeepBlue
 import com.codebook.wellme.utils.Constants
 import com.codebook.wellme.utils.Constants.AT_LEAST_NUM_OR_CHAR_PATTERN
 import com.codebook.wellme.utils.Constants.UPPER_LOWER_PATTERN
 import com.codebook.wellme.utils.GoogleAuthUiClient
-import com.codebook.wellme.utils.Screen
 import com.codebook.wellme.utils.validateEmail
-import com.codebook.wellme.utils.validatePassword
 import com.codebook.wellme.utils.validateWithRegex
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
@@ -154,7 +153,7 @@ private fun SignUpScreenContent(
                 labelColor = DarkGray,
                 placeholder = stringResource(R.string.place_the_password_here),
                 default = uiState.password,
-                error = if (uiState.password.validateWithRegex(Constants.PASSWORD_PATTERN)) null else "  ",
+                error = if (uiState.password.validateWithRegex(Constants.PASSWORD_PATTERN) || uiState.password.isNullOrEmpty()) null else "  ",
                 isPassword = true,
                 leadingIcon = R.drawable.lock, keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,

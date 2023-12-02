@@ -32,7 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import com.codebook.wellme.R
 import com.codebook.wellme.ui.RectanglePrimaryButton
 import com.codebook.wellme.ui.theme.DeepBlue
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 
 @Composable
 fun EmailSentScreen(navController: NavHostController) {

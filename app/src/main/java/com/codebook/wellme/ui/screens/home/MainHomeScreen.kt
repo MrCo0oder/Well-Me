@@ -40,7 +40,7 @@ import com.codebook.wellme.ui.BottomNavIcon
 import com.codebook.wellme.ui.theme.LilacPetals
 import com.codebook.wellme.ui.theme.PurplePlum
 import com.codebook.wellme.ui.theme.VioletLight
-import com.codebook.wellme.utils.Screen
+import com.codebook.wellme.navigation.Screen
 import kotlin.math.roundToInt
 
 @Composable

@@ -87,8 +87,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("androidx.compose.runtime:runtime:1.5.4")
-//    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
 
+    implementation ("com.github.zj565061763:compose-wheel-picker:1.0.0-alpha19")
 }
