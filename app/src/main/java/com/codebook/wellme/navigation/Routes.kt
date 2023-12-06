@@ -9,7 +9,6 @@ import com.codebook.wellme.navigation.Routes.HOME_SCREEN
 import com.codebook.wellme.navigation.Routes.LOGIN_SCREEN
 import com.codebook.wellme.navigation.Routes.MAIN_HOME_SCREEN
 import com.codebook.wellme.navigation.Routes.ONBOARDING_SCREEN
-import com.codebook.wellme.navigation.Routes.PROGRESS_SCREEN
 import com.codebook.wellme.navigation.Routes.SETTINGS_SCREEN
 import com.codebook.wellme.navigation.Routes.SIGNUP_SCREEN
 import com.codebook.wellme.navigation.Routes.WELCOME_SCREEN
@@ -25,7 +24,6 @@ private object Routes {
 
     const val HOME_SCREEN = "HOME_SCREEN"
     const val ACTIVITY_SCREEN = "ACTIVITY_SCREEN"
-    const val PROGRESS_SCREEN = "PROGRESS_SCREEN"
     const val SETTINGS_SCREEN = "SETTINGS_SCREEN"
     const val ADDS_SUPPLEMENT_SCREEN = "ADD_SUPPLEMENT_SCREEN"
     const val ADD_ACTIVITY_SCREEN = "ADD_ACTIVITY_SCREEN"
@@ -41,7 +39,6 @@ sealed class Screen(val destination: String) {
     object HomeScreen : Screen(HOME_SCREEN)
     object MainHomeScreen : Screen(MAIN_HOME_SCREEN)
     object ActivityScreen : Screen(ACTIVITY_SCREEN)
-    object ProgressScreen : Screen(PROGRESS_SCREEN)
     object SettingsScreen : Screen(SETTINGS_SCREEN)
     object AddSupplementScreen : Screen(ADDS_SUPPLEMENT_SCREEN)
     object AddActivityScreen : Screen(ADD_ACTIVITY_SCREEN)

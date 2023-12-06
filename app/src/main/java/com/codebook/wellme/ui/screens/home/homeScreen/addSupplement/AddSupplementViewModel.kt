@@ -1,11 +1,23 @@
 package com.codebook.wellme.ui.screens.home.homeScreen.addSupplement
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.codebook.wellme.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.time.LocalTime
+import java.util.Date
 
 data class SupFormsState(val id: Int = 0, val icon: Int = 0, val name: String = "")
+data class TimeOfDayState(
+    val id: Int = 0,
+    val icon: Int = 0,
+    val name: String = "",
+    val time: LocalTime? = null
+)
+
+
 object Supplements {
     val formList = listOf(
         SupFormsState(0, R.drawable.pill, "Pill"),
@@ -15,11 +27,13 @@ object Supplements {
         SupFormsState(4, R.drawable.spoon, "Spoon"),
 
         )
+
+    @RequiresApi(Build.VERSION_CODES.O)
     val timeOfDayList = listOf(
-        SupFormsState(0, R.drawable.sunrise, "Morning"),
-        SupFormsState(1, R.drawable.afternoon, "Afternoon"),
-        SupFormsState(2, R.drawable.sunset, "Evening"),
-        SupFormsState(3, R.drawable.night, "Night"),
+        TimeOfDayState(0, R.drawable.sunrise, "Morning", LocalTime.of(10, 0, 0)),
+        TimeOfDayState(1, R.drawable.afternoon, "Afternoon", LocalTime.of(15, 37, 0)),
+        TimeOfDayState(2, R.drawable.sunset, "Evening", LocalTime.of(15, 40, 0)),
+        TimeOfDayState(3, R.drawable.night, "Night", LocalTime.of(21, 0, 0)),
     )
 }
 
@@ -30,15 +44,15 @@ data class AddSuppState(
     var frequency: Int = 0,
     var timeOfDay: Int = -1,
     var takingWithMeals: Int = -1,
-    var startDate: String? = null,
-    var endDate: String? = null,
+    var startDate: Date? = null,
+    var endDate: Date? = null,
 )
 
 
 sealed class AddSuppStateUiEvents {
     data class Name(val value: String) : AddSuppStateUiEvents()
-    data class StartDate(val value: String) : AddSuppStateUiEvents()
-    data class EndDate(val value: String) : AddSuppStateUiEvents()
+    data class StartDate(val value: Date) : AddSuppStateUiEvents()
+    data class EndDate(val value: Date) : AddSuppStateUiEvents()
     data class Form(val value: Int) : AddSuppStateUiEvents()
     data class Dosage(val value: Int) : AddSuppStateUiEvents()
     data class Frequency(val value: Int) : AddSuppStateUiEvents()

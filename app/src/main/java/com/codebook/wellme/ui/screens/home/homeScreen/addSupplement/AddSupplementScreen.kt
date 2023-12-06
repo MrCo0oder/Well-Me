@@ -1,6 +1,12 @@
 package com.codebook.wellme.ui.screens.home.homeScreen.addSupplement
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context.ALARM_SERVICE
+import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.codebook.wellme.NotificationsReceiver
 import com.codebook.wellme.R
 import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.ui.BodyTextTwo
@@ -73,8 +81,12 @@ import com.codebook.wellme.ui.theme.LilacPetals
 import com.codebook.wellme.ui.theme.LilacPetalsDark
 import com.codebook.wellme.ui.theme.PurplePlum
 import com.codebook.wellme.navigation.Screen
+import com.codebook.wellme.ui.screens.home.homeScreen.addSupplement.Supplements.timeOfDayList
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,14 +96,22 @@ fun AddSupplementScreen(navController: NavHostController) {
     val columnVerticalArrangement = Arrangement.spacedBy(20.dp)
     var showBottomSheet by remember { mutableStateOf(false) }
     val dateRangePickerState = rememberDateRangePickerState(
+        initialSelectedStartDateMillis = Date().time,
         initialDisplayMode = DisplayMode.Picker,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= System.currentTimeMillis()
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                val millis = calendar.timeInMillis
+                return utcTimeMillis >= millis
             }
         })
     val scaffoldState =
         rememberModalBottomSheetState()
+    val context = LocalContext.current.applicationContext
 
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -106,6 +126,34 @@ fun AddSupplementScreen(navController: NavHostController) {
                 label = stringResource(id = R.string.add_supplement),
                 isEnabled = viewModel.isValidSupp()
             ) {
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, 17)
+                calendar.set(Calendar.MINUTE, 20)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                val millis = calendar.timeInMillis
+                val intent = Intent(context, NotificationsReceiver::class.java)
+                val pIntent = if (
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                ) PendingIntent.getBroadcast(
+                    context,
+                    100,
+                    intent,
+                    PendingIntent.FLAG_MUTABLE
+                ) else
+                    PendingIntent.getBroadcast(
+                        context,
+                        100,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                val am = context.getSystemService(ALARM_SERVICE) as AlarmManager
+                am.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    millis,
+                    AlarmManager.INTERVAL_DAY,
+                    pIntent
+                )
                 navController.navigate(Screen.MainHomeScreen.destination) {
                     popUpTo(Screen.MainHomeScreen.destination) { inclusive = true }
                 }
@@ -166,9 +214,9 @@ fun AddSupplementScreen(navController: NavHostController) {
                         labelColor = Color.DarkGray,
                         placeholder = stringResource(R.string.type_name_of_the_supplement),
                         default = uiState.name,
-                        error = if (uiState.name.length >= 3 || uiState.name.isNullOrEmpty()) null else "Enter a Valid Drug Name",
+                        error = if (uiState.name.length >= 3 || uiState.name.isEmpty()) null else "Enter a Valid Drug Name",
                         keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next,
+                            imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Text
                         ), modifier = Modifier.fillMaxWidth()
                     ) {
@@ -187,7 +235,7 @@ fun AddSupplementScreen(navController: NavHostController) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    items(Supplements.formList.size) {
+                    items(formList.size) {
                         FormsSelectableCard(
                             Modifier,
                             formList[it].id,
@@ -270,22 +318,19 @@ fun AddSupplementScreen(navController: NavHostController) {
                                     showBottomSheet = !showBottomSheet
                                     scaffoldState.show()
                                 }
+
                             }
                     ) {
                         BodyTextTwo(
                             text = if (dateRangePickerState.selectedStartDateMillis != null && dateRangePickerState.selectedEndDateMillis != null) {
                                 viewModel.onEvent(
                                     AddSuppStateUiEvents.StartDate(
-                                        getFormattedDate(
-                                            dateRangePickerState.selectedStartDateMillis!!
-                                        )
+                                        Date(dateRangePickerState.selectedStartDateMillis!!)
                                     )
                                 )
                                 viewModel.onEvent(
                                     AddSuppStateUiEvents.EndDate(
-                                        getFormattedDate(
-                                            dateRangePickerState.selectedEndDateMillis!!
-                                        )
+                                        Date(dateRangePickerState.selectedEndDateMillis!!)
                                     )
                                 )
                                 buildString {
@@ -313,13 +358,13 @@ fun AddSupplementScreen(navController: NavHostController) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(12.dp)
                 ) {
-                    items(Supplements.timeOfDayList.size) {
+                    items(timeOfDayList.size) {
                         FormsSelectableCard(
                             Modifier,
-                            Supplements.timeOfDayList[it].id,
-                            uiState.timeOfDay == Supplements.timeOfDayList[it].id,
-                            Supplements.timeOfDayList[it].name,
-                            Supplements.timeOfDayList[it].icon
+                            timeOfDayList[it].id,
+                            uiState.timeOfDay == timeOfDayList[it].id,
+                            timeOfDayList[it].name,
+                            timeOfDayList[it].icon
                         ) { i, _ ->
                             viewModel.onEvent(AddSuppStateUiEvents.TimeOfDay(i))
                         }
@@ -372,12 +417,14 @@ fun AddSupplementScreen(navController: NavHostController) {
                 }
                 Spacer(modifier = Modifier.height(70.dp))
             }
+
         }
     }
 }
 
 
-@Preview()
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
 @Composable
 private fun AddSupplementScreenPreview() {
     AddSupplementScreen(rememberNavController())

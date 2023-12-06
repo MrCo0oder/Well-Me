@@ -250,6 +250,9 @@ private fun SignUpScreenContent(
                     ).show()
                     Log.i("User Info :", googleAuthClient.getSignedInUser().toString())
 //                    signViewModel.resetState()
+                    navController.navigate(Screen.MainHomeScreen.destination) {
+                        popUpTo(Screen.SignUpScreen.destination) { inclusive = true }
+                    }
                 }
             }
             LaunchedEffect(key1 = googleState.signInError) {

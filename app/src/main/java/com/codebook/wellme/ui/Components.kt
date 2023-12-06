@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -1030,7 +1031,6 @@ fun DateRangePickerSample(
         state,
         modifier = Modifier,
         title = {
-            HeadLine2Text(text = "")
         },
         dateFormatter = DatePickerDefaults.dateFormatter("MMM YYYY", "dd MM yyyy", "dd MM yyyy"),
         headline = {
@@ -1044,14 +1044,14 @@ fun DateRangePickerSample(
                         getFormattedDate(
                             it
                         )
-                    } else "Start Date")?.let { ButtonTextTwo(text = it) }
+                    } else "Start Date")?.let { ButtonTextTwo(text = it, color = PurplePlum) }
                 }
                 Box(Modifier.weight(1f)) {
                     (if (state.selectedEndDateMillis != null) state.selectedEndDateMillis?.let {
                         getFormattedDate(
                             it
                         )
-                    } else "End Date")?.let { ButtonTextTwo(text = it) }
+                    } else "End Date")?.let {ButtonTextTwo(text = it, color = PurplePlum) }
                 }
                 Box(
                     Modifier

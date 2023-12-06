@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -25,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -49,7 +47,6 @@ fun MainHomeScreen(navController: NavHostController) {
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreenContent(
     navController: NavHostController,
@@ -97,8 +94,13 @@ private fun HomeScreenContent(
                         .offset(
                             x = 0.dp,
                             y = -bottomBarOffsetHeightPx.floatValue.roundToInt().dp
-                        ).shadow(elevation = 40.dp, spotColor = PurplePlum, ambientColor = PurplePlum),
-                    containerColor = White
+                        )
+                        .shadow(
+                            elevation = 40.dp,
+                            spotColor = PurplePlum,
+                            ambientColor = PurplePlum
+                        ),
+                    containerColor = LilacPetals
                 ) {
                     Spacer(modifier = Modifier.width(45.dp))
                     NavigationBarItem(selected = bottomState == Screen.HomeScreen.destination,
@@ -133,21 +135,7 @@ private fun HomeScreenContent(
                                 contentDescription = Screen.ActivityScreen.destination
                             )
                         })
-                    NavigationBarItem(selected = bottomState == Screen.ProgressScreen.destination,
-                        colors = NavigationBarItemDefaults.colors(indicatorColor = VioletLight),
-                        onClick = { bottomState = Screen.ProgressScreen.destination },
-                        enabled = bottomState != Screen.ProgressScreen.destination,
-                        icon = {
-                            if (bottomState == Screen.ProgressScreen.destination)
-                                BottomNavIcon(
-                                    R.drawable.progress_filled,
-                                    Screen.ProgressScreen.destination,
-                                ) else
-                                BottomNavIcon(
-                                    R.drawable.progress,
-                                    Screen.ProgressScreen.destination,
-                                )
-                        })
+
                     NavigationBarItem(selected = bottomState == Screen.SettingsScreen.destination,
                         colors = NavigationBarItemDefaults.colors(indicatorColor = VioletLight),
                         onClick = { bottomState = Screen.SettingsScreen.destination },
@@ -167,16 +155,7 @@ private fun HomeScreenContent(
                 }
             },
         ) {
-//            Column(
-//                Modifier
-//                    .fillMaxSize()
-////                    .padding(start = 24.dp, end = 24.dp, top = 30.dp)
-//                    .verticalScroll(rememberScrollState()),
-//                verticalArrangement = Arrangement.spacedBy(20.dp),
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
             HomeNavigationGraph(navController, mainNavController)
-//            }
         }
     }
     LaunchedEffect(key1 = bottomState) {
