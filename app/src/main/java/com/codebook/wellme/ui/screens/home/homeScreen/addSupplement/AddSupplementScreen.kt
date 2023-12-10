@@ -1,10 +1,6 @@
 package com.codebook.wellme.ui.screens.home.homeScreen.addSupplement
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context.ALARM_SERVICE
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -59,8 +55,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.codebook.wellme.NotificationsReceiver
+import com.codebook.wellme.NotificationService
 import com.codebook.wellme.R
+import com.codebook.wellme.navigation.Screen
 import com.codebook.wellme.ui.BodyText3Text
 import com.codebook.wellme.ui.BodyTextTwo
 import com.codebook.wellme.ui.CustomDropDown
@@ -75,13 +72,12 @@ import com.codebook.wellme.ui.SquareButton
 import com.codebook.wellme.ui.TextInputWithLabel
 import com.codebook.wellme.ui.getFormattedDate
 import com.codebook.wellme.ui.screens.home.homeScreen.addSupplement.Supplements.formList
+import com.codebook.wellme.ui.screens.home.homeScreen.addSupplement.Supplements.timeOfDayList
 import com.codebook.wellme.ui.theme.DarkGrey
 import com.codebook.wellme.ui.theme.DeepBlue
 import com.codebook.wellme.ui.theme.LilacPetals
 import com.codebook.wellme.ui.theme.LilacPetalsDark
 import com.codebook.wellme.ui.theme.PurplePlum
-import com.codebook.wellme.navigation.Screen
-import com.codebook.wellme.ui.screens.home.homeScreen.addSupplement.Supplements.timeOfDayList
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -127,33 +123,13 @@ fun AddSupplementScreen(navController: NavHostController) {
                 isEnabled = viewModel.isValidSupp()
             ) {
                 val calendar = Calendar.getInstance()
-                calendar.set(Calendar.HOUR_OF_DAY, 17)
-                calendar.set(Calendar.MINUTE, 20)
+                calendar.set(Calendar.HOUR_OF_DAY, timeOfDayList[uiState.timeOfDay].time?.hour ?: 0)
+                calendar.set(Calendar.MINUTE, timeOfDayList[uiState.timeOfDay].time?.minute ?: 0)
                 calendar.set(Calendar.SECOND, 0)
                 calendar.set(Calendar.MILLISECOND, 0)
                 val millis = calendar.timeInMillis
-                val intent = Intent(context, NotificationsReceiver::class.java)
-                val pIntent = if (
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                ) PendingIntent.getBroadcast(
-                    context,
-                    100,
-                    intent,
-                    PendingIntent.FLAG_MUTABLE
-                ) else
-                    PendingIntent.getBroadcast(
-                        context,
-                        100,
-                        intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                val am = context.getSystemService(ALARM_SERVICE) as AlarmManager
-                am.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    millis,
-                    AlarmManager.INTERVAL_DAY,
-                    pIntent
-                )
+                val service = NotificationService(context)
+                service.scheduleNotification(millis, uiState.name)
                 navController.navigate(Screen.MainHomeScreen.destination) {
                     popUpTo(Screen.MainHomeScreen.destination) { inclusive = true }
                 }

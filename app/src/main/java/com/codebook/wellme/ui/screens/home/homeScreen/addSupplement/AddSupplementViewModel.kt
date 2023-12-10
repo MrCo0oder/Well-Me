@@ -9,6 +9,21 @@ import kotlinx.coroutines.flow.StateFlow
 import java.time.LocalTime
 import java.util.Date
 
+enum class Forms {
+    Pill,
+    Tablet,
+    Sachet,
+    Drops,
+    Spoon
+}
+
+enum class TimeOfDay {
+    Morning,
+    Afternoon,
+    Evening,
+    Night
+}
+
 data class SupFormsState(val id: Int = 0, val icon: Int = 0, val name: String = "")
 data class TimeOfDayState(
     val id: Int = 0,
@@ -20,20 +35,19 @@ data class TimeOfDayState(
 
 object Supplements {
     val formList = listOf(
-        SupFormsState(0, R.drawable.pill, "Pill"),
-        SupFormsState(1, R.drawable.tablet, "Tablet"),
-        SupFormsState(2, R.drawable.sashet, "Sachet"),
-        SupFormsState(3, R.drawable.drops, "Drops"),
-        SupFormsState(4, R.drawable.spoon, "Spoon"),
-
-        )
+        SupFormsState(0, R.drawable.pill, Forms.Pill.name),
+        SupFormsState(1, R.drawable.tablet, Forms.Tablet.name),
+        SupFormsState(2, R.drawable.sashet, Forms.Sachet.name),
+        SupFormsState(3, R.drawable.drops, Forms.Drops.name),
+        SupFormsState(4, R.drawable.spoon, Forms.Spoon.name),
+    )
 
     @RequiresApi(Build.VERSION_CODES.O)
     val timeOfDayList = listOf(
-        TimeOfDayState(0, R.drawable.sunrise, "Morning", LocalTime.of(10, 0, 0)),
-        TimeOfDayState(1, R.drawable.afternoon, "Afternoon", LocalTime.of(15, 37, 0)),
-        TimeOfDayState(2, R.drawable.sunset, "Evening", LocalTime.of(15, 40, 0)),
-        TimeOfDayState(3, R.drawable.night, "Night", LocalTime.of(21, 0, 0)),
+        TimeOfDayState(0, R.drawable.sunrise, TimeOfDay.Morning.name, LocalTime.of(10, 0, 0)),
+        TimeOfDayState(1, R.drawable.afternoon, TimeOfDay.Afternoon.name, LocalTime.of(15, 37, 0)),
+        TimeOfDayState(2, R.drawable.sunset, TimeOfDay.Evening.name, LocalTime.of(17, 40, 0)),
+        TimeOfDayState(3, R.drawable.night, TimeOfDay.Night.name, LocalTime.of(21, 0, 0)),
     )
 }
 
