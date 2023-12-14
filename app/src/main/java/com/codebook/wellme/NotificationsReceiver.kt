@@ -51,6 +51,7 @@ class NotificationsReceiver : BroadcastReceiver() {
             .setContentTitle("Medication Reminder")
             .setContentText(context.getString(R.string.medication_reminder_time, medicationName))
             .setContentIntent(activityPendingIntent)
+            .setAutoCancel(true)
             .build()
 
         // TODO: Use medication id as notification id.

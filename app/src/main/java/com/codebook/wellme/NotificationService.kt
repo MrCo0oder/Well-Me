@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.util.Date
+import kotlin.time.Duration.Companion.milliseconds
 
 class NotificationService(
     private val context: Context
@@ -26,6 +28,8 @@ class NotificationService(
         val alarmService = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         try {
+/*            alarmService.setRepeating(AlarmManager.RTC_WAKEUP,
+                Date().time.plus(1000).milliseconds.inWholeMilliseconds,60000,pendingIntent)*/
             alarmService.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 time,
