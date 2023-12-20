@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -23,6 +22,8 @@ class MainActivity : ComponentActivity() {
         Thread.sleep(1500)
         super.onCreate(savedInstanceState)
         createNotificationChannel()
+//        val fb=FirebaseMessaging.getInstance()
+//        fb.subscribeToTopic("new_user_forums")
         setContent {
             WellMeTheme {
                 AppNavigationGraph()
@@ -37,16 +38,14 @@ class MainActivity : ComponentActivity() {
         Log.i( "isMedicationNotification: ",isMedicationNotification.toString())
     }
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NotificationService.MEDICATION_CHANNEL_ID,
-               "Medication Reminder",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            channel.description = "Notifications for medication reminder"
+        val channel = NotificationChannel(
+            NotificationService.MEDICATION_CHANNEL_ID,
+           "Medication Reminder",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        channel.description = "Notifications for medication reminder"
 
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

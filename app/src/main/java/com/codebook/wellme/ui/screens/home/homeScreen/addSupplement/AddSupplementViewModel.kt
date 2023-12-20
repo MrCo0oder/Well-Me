@@ -1,7 +1,5 @@
 package com.codebook.wellme.ui.screens.home.homeScreen.addSupplement
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.codebook.wellme.R
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +40,6 @@ object Supplements {
         SupFormsState(4, R.drawable.spoon, Forms.Spoon.name),
     )
 
-    @RequiresApi(Build.VERSION_CODES.O)
     val timeOfDayList = listOf(
         TimeOfDayState(0, R.drawable.sunrise, TimeOfDay.Morning.name, LocalTime.of(10, 0, 0)),
         TimeOfDayState(1, R.drawable.afternoon, TimeOfDay.Afternoon.name, LocalTime.of(15, 37, 0)),
