@@ -573,9 +573,8 @@ fun BottomNavIcon(drawableId: Int, contentDescription: String) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SquareIconButton(drawableId: Int, onClick: () -> Unit) {
+fun SquareIconButton(drawableId: Int, tint: Color = DarkGrey, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(40.dp)
@@ -587,7 +586,7 @@ fun SquareIconButton(drawableId: Int, onClick: () -> Unit) {
         Icon(
             painter = painterResource(drawableId),
             contentDescription = null,
-            tint = DarkGrey,
+            tint = tint,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp)
@@ -611,7 +610,7 @@ fun HealthStateCard(
         onClick = { onClick(id) },
         colors = CardDefaults.cardColors(cardColor, contentColor = DustGrey),
         modifier = modifier.size(120.dp, 160.dp), enabled = false,
-        ) {
+    ) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -1051,7 +1050,7 @@ fun DateRangePickerSample(
                         getFormattedDate(
                             it
                         )
-                    } else "End Date")?.let {ButtonTextTwo(text = it, color = PurplePlum) }
+                    } else "End Date")?.let { ButtonTextTwo(text = it, color = PurplePlum) }
                 }
                 Box(
                     Modifier

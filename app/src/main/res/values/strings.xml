@@ -34,5 +34,8 @@
     <string name="hours_minutes">(hours/minutes)</string>
     <string name="time_of_day">Time of day</string>
     <string name="medication_reminder_time">It is time to take your medication, %s. Open the app to log it.</string>
+    <string name="activities">Activities</string>
+    <string name="today_s_summary">Today’s summary</string>
+    <string name="start_activity_now">Start activity now</string>
 
 </resources>

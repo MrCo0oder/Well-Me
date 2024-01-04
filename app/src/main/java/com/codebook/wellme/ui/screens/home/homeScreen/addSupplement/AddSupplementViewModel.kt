@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.time.LocalTime
 import java.util.Date
+import java.util.UUID
 
 enum class Forms {
     Pill,
@@ -49,6 +50,7 @@ object Supplements {
 }
 
 data class AddSuppState(
+    var id: Int = UUID.randomUUID().hashCode(),
     var name: String = "",
     var form: Int = -1,
     var dosage: Int = -1,

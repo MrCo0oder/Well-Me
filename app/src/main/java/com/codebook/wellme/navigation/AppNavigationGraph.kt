@@ -23,7 +23,7 @@ fun AppNavigationGraph() {
 //    )
     NavHost(
         navController = navController,
-        startDestination = Screen.AddSupplementScreen.destination
+        startDestination = Screen.MainHomeScreen.destination
     ) {
         composable(Screen.WelcomeScreen.destination) {
             WelcomeScreen(navController)

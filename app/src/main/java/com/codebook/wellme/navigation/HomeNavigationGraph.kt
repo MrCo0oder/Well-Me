@@ -11,7 +11,7 @@ import com.codebook.wellme.ui.screens.home.settings.SettingsScreen
 @Composable
 fun HomeNavigationGraph(navController :NavHostController,mainNavController :NavHostController) {
 
-    NavHost(navController = navController, startDestination = Screen.HomeScreen.destination) {
+    NavHost(navController = navController, startDestination = Screen.ActivityScreen.destination) {
         composable(Screen.HomeScreen.destination) {
             HomeScreen(navController,mainNavController)
         }

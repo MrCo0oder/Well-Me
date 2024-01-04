@@ -12,6 +12,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.codebook.wellme.navigation.AppNavigationGraph
 import com.codebook.wellme.ui.theme.WellMeTheme
+import java.util.UUID
+import kotlin.math.log
 
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +24,7 @@ class MainActivity : ComponentActivity() {
         Thread.sleep(1500)
         super.onCreate(savedInstanceState)
         createNotificationChannel()
+        Log.d( "uuid", UUID.randomUUID().toString())
 //        val fb=FirebaseMessaging.getInstance()
 //        fb.subscribeToTopic("new_user_forums")
         setContent {
