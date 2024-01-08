@@ -76,11 +76,8 @@ fun ActivityScreen(navController: NavHostController, mainNavController: NavHostC
                     label = stringResource(R.string.start_activity_now),
                     isEnabled = true
                 ) {
-//                    navController.navigate(Screen.MainHomeScreen.destination) {
-//                        popUpTo(Screen.LoginScreen.destination) {
-//                            inclusive = true
-//                        }
-//                    }
+                    mainNavController.navigate(Screen.StartingActivityScreen.destination) {
+                    }
                 }
             }
             Headline3(

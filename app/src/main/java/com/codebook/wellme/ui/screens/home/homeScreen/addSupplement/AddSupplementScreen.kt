@@ -82,7 +82,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

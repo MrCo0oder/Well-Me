@@ -1,5 +1,6 @@
 package com.codebook.wellme.ui
 
+import android.text.style.BackgroundColorSpan
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -574,12 +575,17 @@ fun BottomNavIcon(drawableId: Int, contentDescription: String) {
 }
 
 @Composable
-fun SquareIconButton(drawableId: Int, tint: Color = DarkGrey, onClick: () -> Unit) {
+fun SquareIconButton(
+    drawableId: Int,
+    tint: Color = DarkGrey,
+    backgroundColor: Color = White,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .size(40.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(White)
+            .background(backgroundColor)
             .clickable { onClick() },
         contentAlignment = Alignment.Center,
     ) {

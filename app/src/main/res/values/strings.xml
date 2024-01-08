@@ -37,5 +37,7 @@
     <string name="activities">Activities</string>
     <string name="today_s_summary">Today’s summary</string>
     <string name="start_activity_now">Start activity now</string>
+    <string name="start_activity">Start Activity</string>
+    <string name="start_now">Start now</string>
 
 </resources>

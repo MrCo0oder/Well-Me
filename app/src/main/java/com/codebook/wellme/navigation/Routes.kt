@@ -27,6 +27,7 @@ private object Routes {
     const val SETTINGS_SCREEN = "SETTINGS_SCREEN"
     const val ADDS_SUPPLEMENT_SCREEN = "ADD_SUPPLEMENT_SCREEN"
     const val ADD_ACTIVITY_SCREEN = "ADD_ACTIVITY_SCREEN"
+    const val STARTING_ACTIVITY_SCREEN = "STARTING_ACTIVITY_SCREEN"
 }
 
 sealed class Screen(val destination: String) {
@@ -42,5 +43,6 @@ sealed class Screen(val destination: String) {
     object SettingsScreen : Screen(SETTINGS_SCREEN)
     object AddSupplementScreen : Screen(ADDS_SUPPLEMENT_SCREEN)
     object AddActivityScreen : Screen(ADD_ACTIVITY_SCREEN)
+    object StartingActivityScreen : Screen(ADD_ACTIVITY_SCREEN)
 
 }
