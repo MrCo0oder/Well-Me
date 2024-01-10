@@ -1,9 +1,16 @@
 package com.codebook.wellme.navigation
 
+import android.app.ActivityManager
+import android.app.Service
+import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.codebook.wellme.service.StopwatchService
+import com.codebook.wellme.service.StopwatchState
 import com.codebook.wellme.ui.screens.authCycle.forgetPassword.EmailSentScreen
 import com.codebook.wellme.ui.screens.authCycle.forgetPassword.ForgetPasswordScreen
 import com.codebook.wellme.ui.screens.authCycle.login.LoginScreen
@@ -11,12 +18,14 @@ import com.codebook.wellme.ui.screens.authCycle.OnboardingScreen
 import com.codebook.wellme.ui.screens.authCycle.WelcomeScreen
 import com.codebook.wellme.ui.screens.authCycle.signup.SignUpScreen
 import com.codebook.wellme.ui.screens.home.MainHomeScreen
+import com.codebook.wellme.ui.screens.home.activity.activityTimer.ActivityTimerScreen
 import com.codebook.wellme.ui.screens.home.activity.startingActivity.StartingActivityScreen
 import com.codebook.wellme.ui.screens.home.homeScreen.addActivity.AddActivityScreen
 import com.codebook.wellme.ui.screens.home.homeScreen.addSupplement.AddSupplementScreen
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavigationGraph() {
+fun AppNavigationGraph(stopwatchService: StopwatchService) {
     val navController = rememberNavController()
 //    val createAccountViewModel = CreateAccountViewModel()
 //    val mSignInViewModel: SignInGoogleViewModel = viewModel(
@@ -24,7 +33,8 @@ fun AppNavigationGraph() {
 //    )
     NavHost(
         navController = navController,
-        startDestination = Screen.MainHomeScreen.destination
+        startDestination = if (stopwatchService.currentState.value != StopwatchState.Idle || stopwatchService.currentState.value == StopwatchState.Started)
+            Screen.ActivityTimerScreen.destination else Screen.MainHomeScreen.destination
     ) {
         composable(Screen.WelcomeScreen.destination) {
             WelcomeScreen(navController)
@@ -53,8 +63,12 @@ fun AppNavigationGraph() {
         composable(Screen.ActivityScreen.destination) {
             AddActivityScreen(navController)
         }
-        composable(Screen.StartingActivityScreen.destination){
+        composable(Screen.StartingActivityScreen.destination) {
             StartingActivityScreen(navController)
+        }
+        composable(Screen.ActivityTimerScreen.destination) {
+
+            ActivityTimerScreen(navController, stopwatchService)
         }
 
         /*   composable(Screen.OnBoardingScreen.destination) {
@@ -113,4 +127,12 @@ fun AppNavigationGraph() {
            }
            */
     }
+}
+
+fun Context.isMyServiceRunning(serviceClass: Class<out Service>) = try {
+    (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+        .getRunningServices(Int.MAX_VALUE)
+        .any { it.service.className == serviceClass.name }
+} catch (e: Exception) {
+    false
 }

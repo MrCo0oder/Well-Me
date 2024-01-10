@@ -139,10 +139,20 @@ fun RectanglePrimaryButton(
 }
 
 @Composable
-private fun ButtonText1(label: String, modifier: Modifier = Modifier) {
+ fun ButtonText1(label: String, modifier: Modifier = Modifier) {
     Text(
         text = label,
         style = MaterialTheme.typography.labelLarge.copy(color = White),
+        modifier = modifier,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+ fun BodyText1(label: String, modifier: Modifier = Modifier) {
+    Text(
+        text = label,
+        style = MaterialTheme.typography.bodyLarge.copy(color = DeepBlue),
         modifier = modifier,
         textAlign = TextAlign.Center
     )

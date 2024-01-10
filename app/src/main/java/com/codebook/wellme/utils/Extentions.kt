@@ -35,3 +35,10 @@ fun dateValidator(timeInMillis: Long): Boolean {
     endCalenderDate.set(Calendar.DATE, Calendar.DATE )
     return timeInMillis > Calendar.getInstance().timeInMillis && timeInMillis < endCalenderDate.timeInMillis
 }
+fun formatTime(seconds: String, minutes: String, hours: String): String {
+    return "$hours:$minutes:$seconds"
+}
+
+fun Int.pad(): String {
+    return this.toString().padStart(2, '0')
+}

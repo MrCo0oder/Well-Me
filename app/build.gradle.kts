@@ -4,6 +4,8 @@ plugins {
 //    id("com.google.gms.google-services")
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -35,11 +37,11 @@ android {
     }
     compileOptions {
 //        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -94,6 +96,15 @@ dependencies {
 
     implementation("com.github.zj565061763:compose-wheel-picker:1.0.0-alpha19")
 
+    // Dagger hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
+    kapt("androidx.hilt:hilt-compiler:1.1.0-beta01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
 /*    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")*/
+}
+kapt {
+    correctErrorTypes = true
 }

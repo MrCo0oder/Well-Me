@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.codebook.wellme.R
+import com.codebook.wellme.navigation.Screen
 import com.codebook.wellme.ui.ActivitySelectableCard
 import com.codebook.wellme.ui.Headline3
 import com.codebook.wellme.ui.HeadlineLarge
@@ -97,7 +98,9 @@ fun StartingActivityScreen(mainNavController: NavHostController) {
                 label = stringResource(R.string.start_now),
                 isEnabled = viewModel.isValidScreen()
             ) {
+                mainNavController.navigate(Screen.ActivityTimerScreen.destination){
 
+                }
             }
         }
     }
